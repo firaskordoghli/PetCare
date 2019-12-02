@@ -1,5 +1,6 @@
 package kordoghli.firas.petcare;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -48,7 +49,9 @@ public class SignupActivity extends AppCompatActivity {
         ApiUtil.getServiceClass().signUp(object).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Toast.makeText(SignupActivity.this, response.body().get("status").toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignupActivity.this, "account created", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {

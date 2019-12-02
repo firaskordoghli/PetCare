@@ -57,7 +57,9 @@ public class LoginActivity extends AppCompatActivity {
         ApiUtil.getServiceClass().login(object).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Toast.makeText(LoginActivity.this, response.body().get("status").toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "logged in", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
