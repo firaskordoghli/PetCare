@@ -14,4 +14,7 @@ public interface RetrofitInterface {
 
     @POST("login")
     public Call<JsonObject> login(@Body JsonObject object);
+
+    @POST("addPet")
+    public Call<JsonObject> addPet(@Body JsonObject object);
 }

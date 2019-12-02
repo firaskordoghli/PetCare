@@ -1,4 +1,4 @@
-package kordoghli.firas.petcare;
+package kordoghli.firas.petcare.Ui.authentication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
+import kordoghli.firas.petcare.R;
+import kordoghli.firas.petcare.Ui.MainActivity;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 import retrofit2.Call;
 import retrofit2.Callback;

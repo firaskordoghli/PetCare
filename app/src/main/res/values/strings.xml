@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Pet Care</string>
+
+    <string-array name="gender">
+        <item>Male</item>
+        <item>Femelle</item>
+    </string-array>
+
+    <string-array name="type">
+        <item>Chien</item>
+        <item>Chat</item>
+        <item>Lapin</item>
+        <item>Others</item>
+    </string-array>
 </resources>

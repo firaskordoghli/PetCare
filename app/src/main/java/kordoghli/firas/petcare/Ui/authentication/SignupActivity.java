@@ -1,4 +1,4 @@
-package kordoghli.firas.petcare;
+package kordoghli.firas.petcare.Ui.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
 
+import kordoghli.firas.petcare.R;
+import kordoghli.firas.petcare.Ui.MainActivity;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 import retrofit2.Call;
 import retrofit2.Callback;

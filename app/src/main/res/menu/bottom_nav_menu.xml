@@ -6,17 +6,23 @@
         android:title="Home"/>
 
     <item
-        android:id="@+id/events"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="Events"/>
+        android:id="@+id/myPets"
+        android:icon="@drawable/ic_my_pets"
+        android:title="my pets"/>
 
     <item
-        android:id="@+id/explore"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="Notification"/>
+        android:id="@+id/diary"
+        android:icon="@drawable/ic_diary"
+        android:title="diary"/>
 
     <item
-        android:id="@+id/profile"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="Profile"/>
+        android:id="@+id/adoptions"
+        android:icon="@drawable/ic_adoption"
+        android:title="adoptions"/>
+
+    <item
+        android:id="@+id/account"
+        android:icon="@drawable/ic_account"
+        android:title="account"/>
+
 </menu>

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import kordoghli.firas.petcare.LoginActivity;
+import kordoghli.firas.petcare.Ui.authentication.LoginActivity;
 
 public class SessionManager {
 
