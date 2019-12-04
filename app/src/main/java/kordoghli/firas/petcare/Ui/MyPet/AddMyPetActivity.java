@@ -70,6 +70,7 @@ public class AddMyPetActivity extends AppCompatActivity {
         object.addProperty("description", descriptionEt.getText().toString().trim());
         object.addProperty("type", typerSpinner.getSelectedItem().toString());
         object.addProperty("gender", genderSpiner.getSelectedItem().toString());
+        object.addProperty("id_user", 1);
 
         ApiUtil.getServiceClass().addPet(object).enqueue(new Callback<JsonObject>() {
             @Override

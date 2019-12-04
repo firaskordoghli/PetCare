@@ -10,6 +10,10 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import kordoghli.firas.petcare.R;
+import kordoghli.firas.petcare.Ui.Account.AccountFragment;
+import kordoghli.firas.petcare.Ui.Adoptions.AdoptionsFragment;
+import kordoghli.firas.petcare.Ui.Diary.DiaryFragment;
+import kordoghli.firas.petcare.Ui.Home.HomeFragment;
 import kordoghli.firas.petcare.Ui.MyPet.MyPetsFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,8 +23,11 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     Fragment selectedFragment = null;
-
                     switch (menuItem.getItemId()) {
+                        case R.id.home:
+                            selectedFragment = new HomeFragment();
+                            break;
+
                         case R.id.account:
                             selectedFragment = new AccountFragment();
                             break;
@@ -32,10 +39,12 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.myPets:
                             selectedFragment = new MyPetsFragment();
                             break;
+
+                        case R.id.diary:
+                            selectedFragment = new DiaryFragment();
+                            break;
                     }
-
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-
                     return true;
                 }
             };
@@ -47,6 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
     }
 }

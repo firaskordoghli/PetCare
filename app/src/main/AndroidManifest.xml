@@ -13,17 +13,17 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".Ui.MyPet.AddMyPetActivity">
+        </activity>
+        <activity android:name=".Ui.authentication.SignupActivity" />
+        <activity android:name=".Ui.authentication.LoginActivity">
+        </activity>
+        <activity android:name=".Ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Ui.authentication.SignupActivity" />
-        <activity android:name=".Ui.authentication.LoginActivity">
-
-        </activity>
-        <activity android:name=".Ui.MainActivity"></activity>
     </application>
 
 </manifest>

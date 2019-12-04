@@ -2,6 +2,9 @@ package kordoghli.firas.petcare.Utile.retrofit;
 
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
+import kordoghli.firas.petcare.Data.Pet;
 import kordoghli.firas.petcare.Data.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -17,4 +20,7 @@ public interface RetrofitInterface {
 
     @POST("addPet")
     public Call<JsonObject> addPet(@Body JsonObject object);
+
+    @POST("getAllMyPets/")
+    public Call<List<Pet>> getAllMyPets(@Body JsonObject object);
 }
