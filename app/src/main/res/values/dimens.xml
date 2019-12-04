@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="standard_55">65dp</dimen>
+    <dimen name="standard_105">115dp</dimen>
+    <dimen name="standard_155">165dp</dimen>
+
+    <dimen name="activityPadding">16dp</dimen>
+    <dimen name="placeholderImage">60dp</dimen>
+    <dimen name="placeholderTextHeight">8dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+
+    <dimen name="fluidBottomNavigationHeight">90dp</dimen>
+    <dimen name="fluidBottomNavigationHeightWithOpacity">90dp</dimen>
+
+    <dimen name="fluidBottomNavigationTopContainerMarginLeftRight">1dp</dimen>
+    <dimen name="fluidBottomNavigationTopContainerWidth">88dp</dimen>
+
+    <dimen name="fluidBottomNavigationCircleSize">46dp</dimen>
+    <dimen name="fluidBottomNavigationIconSize">28dp</dimen>
+
+    <dimen name="fluidBottomNavigationCircleMarginTop">37dp</dimen>
+    <dimen name="fluidBottomNavigationIconMarginTop">46dp</dimen>
+    <dimen name="fluidBottomNavigationBackgroundMarginTop">32dp</dimen>
+    <dimen name="fluidBottomNavigationRectangleMarginTop">28dp</dimen>
+    <dimen name="fluidBottomNavigationTitleMarginTop">14dp</dimen>
+
+    <dimen name="fluidBottomNavigationTextSize">12sp</dimen>
+    <dimen name="fluidBottomNavigationItemTranslationY">22dp</dimen>
+</resources>

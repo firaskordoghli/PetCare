@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class MyPetsFragment extends Fragment {
     private RecyclerView mRecycleView;
     private MyPetsAdapter petAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ShimmerFrameLayout mShimmerViewContainer;
 
 
     public MyPetsFragment() {
@@ -56,6 +58,7 @@ public class MyPetsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        mShimmerViewContainer = view.findViewById(R.id.upCommingEventShimmer);
         listPets();
         return view;
     }
@@ -68,6 +71,9 @@ public class MyPetsFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Pet>> call, Response<List<Pet>> response) {
                 final List<Pet> petList = response.body();
+                mShimmerViewContainer.stopShimmer();
+                mShimmerViewContainer.setVisibility(View.GONE);
+
                 mLayoutManager = new LinearLayoutManager(getContext());
                 petAdapter =new MyPetsAdapter(petList);
                 mRecycleView.setLayoutManager(mLayoutManager);
@@ -89,6 +95,18 @@ public class MyPetsFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mShimmerViewContainer.startShimmer();
+    }
+
+    @Override
+    public void onPause() {
+        mShimmerViewContainer.stopShimmer();
+        super.onPause();
     }
 
 }
