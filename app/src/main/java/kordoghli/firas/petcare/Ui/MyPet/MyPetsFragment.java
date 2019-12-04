@@ -77,6 +77,9 @@ public class MyPetsFragment extends Fragment {
                     @Override
                     public void onItemClick(int position) {
                         Toast.makeText(getContext(), petList.get(position).getId().toString(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getContext(), MyPetDetailsActivity.class);
+                        intent.putExtra("idPetFromMyPets", petList.get(position).getId());
+                        startActivity(intent);
                     }
                 });
             }

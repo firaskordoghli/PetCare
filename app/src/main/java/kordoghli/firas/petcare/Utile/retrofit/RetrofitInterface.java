@@ -23,4 +23,7 @@ public interface RetrofitInterface {
 
     @POST("getAllMyPets/")
     public Call<List<Pet>> getAllMyPets(@Body JsonObject object);
+
+    @POST("getMyPetById/")
+    public Call<List<Pet>> getMyPetById(@Body JsonObject object);
 }
