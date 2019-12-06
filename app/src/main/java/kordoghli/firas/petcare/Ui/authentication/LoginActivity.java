@@ -46,11 +46,12 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login();
+                if (validateInputs()){
+                    login();
+                }
             }
         });
 
@@ -58,27 +59,44 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login() {
         JsonObject object = new JsonObject();
-
         object.addProperty("username", emailEt.getText().toString().trim());
         object.addProperty("password", passwordEt.getText().toString().trim());
-
-        ApiUtil.getServiceClass().login(object).enqueue(new Callback<User>() {
+        ApiUtil.getServiceClass().login(object).enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Gson gson = new Gson();
-                User responseUser = response.body();
-                sessionManager.createUserLoginSession(gson.toJson(responseUser));
-                System.out.println(sessionManager.getUserDetails());
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                JsonObject myJsonResponse = new JsonObject();
+                myJsonResponse.getAsJsonObject(gson.toJson(response.body()));
+                boolean existe = gson.toJson(response.body()).contains("false");
+                if (existe) {
+                    emailEt.setError("bad credentials");
+                    emailEt.requestFocus();
+                } else {
+                    User responseUser = gson.fromJson(response.body(), User.class);
+                    sessionManager.createUserLoginSession(gson.toJson(responseUser));
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
             }
-
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                System.out.println(t.getMessage());
+            public void onFailure(Call<JsonObject> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "please connect to the internet", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private boolean validateInputs() {
+        if (passwordEt.getText().toString().equals("")) {
+            passwordEt.setError("required");
+            passwordEt.requestFocus();
+            return false;
+        }
+        if (emailEt.getText().toString().equals("")) {
+            emailEt.setError("required");
+            emailEt.requestFocus();
+            return false;
+        }
+
+        return true;
     }
 }
