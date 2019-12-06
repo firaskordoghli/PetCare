@@ -7,33 +7,25 @@ import java.io.Serializable;
 import java.util.List;
 
 public class User implements Serializable {
-    @SerializedName("_id")
+
+    @SerializedName("id")
     @Expose
-    private String id;
+    private Integer id;
     @SerializedName("username")
     @Expose
     private String username;
-    @SerializedName("password")
-    @Expose
-    private String password;
     @SerializedName("email")
     @Expose
     private String email;
+    @SerializedName("password")
+    @Expose
+    private String password;
 
-    public User() {
-    }
-
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
-
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -45,14 +37,6 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -61,13 +45,21 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

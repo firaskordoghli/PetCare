@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
 
+import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
 import kordoghli.firas.petcare.Ui.MainActivity;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
@@ -48,15 +49,16 @@ public class SignupActivity extends AppCompatActivity {
         object.addProperty("email", emailEt.getText().toString().trim());
         object.addProperty("password", passwordEt.getText().toString().trim());
 
-        ApiUtil.getServiceClass().signUp(object).enqueue(new Callback<JsonObject>() {
+        ApiUtil.getServiceClass().signUp(object).enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 Toast.makeText(SignupActivity.this, "account created", Toast.LENGTH_SHORT).show();
+                System.out.println(response.body().toString());
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 System.out.println(t.getMessage());
                 Toast.makeText(SignupActivity.this, "please connect to the internet", Toast.LENGTH_SHORT).show();
             }

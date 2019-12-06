@@ -13,10 +13,10 @@ import retrofit2.http.POST;
 public interface RetrofitInterface {
 
     @POST("signup")
-    public Call<JsonObject> signUp(@Body JsonObject object);
+    public Call<User> signUp(@Body JsonObject object);
 
     @POST("login")
-    public Call<JsonObject> login(@Body JsonObject object);
+    public Call<User> login(@Body JsonObject object);
 
     @POST("addPet")
     public Call<JsonObject> addPet(@Body JsonObject object);

@@ -118,4 +118,19 @@ public class Pet {
         this.idUser = idUser;
     }
 
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", gender='" + gender + '\'' +
+                ", race='" + race + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", color='" + color + '\'' +
+                ", description='" + description + '\'' +
+                ", photo='" + photo + '\'' +
+                ", idUser=" + idUser +
+                '}';
+    }
 }

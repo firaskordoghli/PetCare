@@ -15,8 +15,10 @@ import kordoghli.firas.petcare.Ui.Adoptions.AdoptionsFragment;
 import kordoghli.firas.petcare.Ui.Diary.DiaryFragment;
 import kordoghli.firas.petcare.Ui.Home.HomeFragment;
 import kordoghli.firas.petcare.Ui.MyPet.MyPetsFragment;
+import kordoghli.firas.petcare.Utile.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
+    private SessionManager sessionManager;
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -53,6 +55,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // User Session Manager
+        sessionManager = new SessionManager(getApplicationContext());
+        // Check user login (this is the important point)
+        // If User is not logged in , This will redirect user to LoginActivity
+        // and finish current activity from activity stack.
+        if (sessionManager.checkLogin())
+            finish();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
