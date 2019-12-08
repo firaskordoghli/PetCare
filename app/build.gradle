@@ -38,4 +38,5 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.3.0@aar'
 
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.5.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 }

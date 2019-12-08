@@ -80,6 +80,9 @@ public class AdoptionsFragment extends Fragment {
                         @Override
                         public void onItemClick(int position) {
                             Toast.makeText(getContext(), adoptionList.get(position).getId().toString(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getContext(), AdoptionDetailsActivity.class);
+                            intent.putExtra("idAdoptionFromAdoptions", adoptionList.get(position).getId());
+                            startActivity(intent);
                         }
                     });
                 }

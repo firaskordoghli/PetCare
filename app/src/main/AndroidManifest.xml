@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Ui.Adoptions.AddAdoptionActivity"></activity>
+        <activity android:name=".Ui.Adoptions.AdoptionDetailsActivity"></activity>
+        <activity android:name=".Ui.Adoptions.AddAdoptionActivity" />
         <activity android:name=".Ui.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
         <activity android:name=".Ui.MyPet.AddMyPetActivity" />
         <activity android:name=".Ui.authentication.SignupActivity" />
         <activity android:name=".Ui.authentication.LoginActivity" />
-        <activity android:name=".Ui.MainActivity"></activity>
+        <activity android:name=".Ui.MainActivity" />
     </application>
 
 </manifest>
