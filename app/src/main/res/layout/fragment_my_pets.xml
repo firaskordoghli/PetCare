@@ -16,6 +16,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tvNoPets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You have no pets "
+        android:textSize="25sp"
+        android:visibility="gone"
+        android:fontFamily="@font/montserrat_bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMyPets"
         android:layout_width="0dp"
@@ -65,5 +78,7 @@
         </LinearLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

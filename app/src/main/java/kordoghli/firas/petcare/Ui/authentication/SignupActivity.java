@@ -69,7 +69,7 @@ public class SignupActivity extends AppCompatActivity {
                     emailEt.requestFocus();
                 } else {
                     User responseUser = gson.fromJson(response.body(), User.class);
-                    sessionManager.createUserLoginSession(responseUser.toString());
+                    sessionManager.createUserLoginSession(gson.toJson(responseUser));
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 }

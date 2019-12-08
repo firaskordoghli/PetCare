@@ -19,8 +19,8 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.PetViewHol
     private List<Pet> mPetsList;
     private MyPetsAdapter.OnItemClickListener mListener;
 
-    public MyPetsAdapter(List<Pet> mEventList) {
-        this.mPetsList = mEventList;
+    public MyPetsAdapter(List<Pet> petList) {
+        this.mPetsList = petList;
     }
 
     public void setOnItemClickListener(MyPetsAdapter.OnItemClickListener listener) {
@@ -41,6 +41,11 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.PetViewHol
 
         holder.namePetTv.setText(pet.getName());
         holder.birthPetTv.setText(pet.getBirthDate());
+        if (pet.getGender().equals("Male")){
+            holder.petGenderIv.setImageResource(R.drawable.ic_male);
+        }else if (pet.getGender().equals("Femelle")){
+            holder.petGenderIv.setImageResource(R.drawable.ic_female);
+        }
     }
 
     @Override

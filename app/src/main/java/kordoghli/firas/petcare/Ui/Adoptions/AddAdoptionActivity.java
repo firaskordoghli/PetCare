@@ -1,4 +1,6 @@
-package kordoghli.firas.petcare.Ui.MyPet;
+package kordoghli.firas.petcare.Ui.Adoptions;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -11,8 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -28,11 +28,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddMyPetActivity extends AppCompatActivity {
-    private EditText nameEt, raceEt, birthEt, colorEt, descriptionEt;
-    private Spinner typerSpinner, genderSpiner;
-    private ImageView petIv;
-    private Button addPetBtn;
+public class AddAdoptionActivity extends AppCompatActivity {
+    private EditText nameEt,raceEt,birthEt,colorEt,descriptionEt,locationEt;
+    private ImageView adoptionIv;
+    private Spinner typeSpinner,genderSpinner;
+    private Button addAdoptionBtn;
+
     private SessionManager sessionManager;
     private DatePickerDialog datePickerDialog;
     private Calendar calendar;
@@ -40,25 +41,26 @@ public class AddMyPetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_my_pet);
+        setContentView(R.layout.activity_add_adoption);
 
-        nameEt = findViewById(R.id.etAddPetName);
-        raceEt = findViewById(R.id.etAddPetRace);
-        birthEt = findViewById(R.id.etAddPetBirth);
-        colorEt = findViewById(R.id.etAddPetColor);
-        descriptionEt = findViewById(R.id.etAddPetDescription);
-        typerSpinner = findViewById(R.id.spinnerAddPetType);
-        genderSpiner = findViewById(R.id.spinnerAddPetGender);
-        petIv = findViewById(R.id.ivetAddPetPhoto);
-        addPetBtn = findViewById(R.id.btnAddPet);
+        nameEt = findViewById(R.id.etAddAdoptionName);
+        raceEt = findViewById(R.id.etAddAdoptionRace);
+        birthEt = findViewById(R.id.etAddAdoptionBirth);
+        colorEt = findViewById(R.id.etAddAdoptionColor);
+        descriptionEt = findViewById(R.id.etAddAdoptionDescription);
+        locationEt = findViewById(R.id.etAddAdoptionLocation);
+        adoptionIv = findViewById(R.id.ivAddAdoptionPhoto);
+        typeSpinner = findViewById(R.id.spinnerAddAdoptionType);
+        genderSpinner = findViewById(R.id.spinnerAddAdoptionGender);
+        addAdoptionBtn = findViewById(R.id.btnAddAdoption);
 
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender, android.R.layout.simple_spinner_item);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        genderSpiner.setAdapter(genderAdapter);
+        genderSpinner.setAdapter(genderAdapter);
 
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this, R.array.type, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typerSpinner.setAdapter(typeAdapter);
+        typeSpinner.setAdapter(typeAdapter);
 
         // User Session Manager
         sessionManager = new SessionManager(getApplicationContext());
@@ -74,7 +76,7 @@ public class AddMyPetActivity extends AppCompatActivity {
                 int month = calendar.get(Calendar.MONTH);
                 int year = calendar.get(Calendar.YEAR);
 
-                datePickerDialog = new DatePickerDialog(AddMyPetActivity.this, new DatePickerDialog.OnDateSetListener() {
+                datePickerDialog = new DatePickerDialog(AddAdoptionActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int mYear, int mMonth, int mDay) {
                         birthEt.setText(mDay + "." + (mMonth + 1) + "." + mYear);
@@ -85,17 +87,17 @@ public class AddMyPetActivity extends AppCompatActivity {
             }
         });
 
-        addPetBtn.setOnClickListener(new View.OnClickListener() {
+        addAdoptionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validateInputs()) {
-                    addPet(currentUser.getId());
+                if (validateInputs()){
+                    addAdoption(currentUser.getId());
                 }
             }
         });
     }
 
-    private void addPet(Integer id_user) {
+    private void addAdoption(Integer id_user) {
         JsonObject object = new JsonObject();
 
         object.addProperty("name", nameEt.getText().toString().trim());
@@ -103,14 +105,16 @@ public class AddMyPetActivity extends AppCompatActivity {
         object.addProperty("birth_date", birthEt.getText().toString().trim());
         object.addProperty("color", colorEt.getText().toString().trim());
         object.addProperty("description", descriptionEt.getText().toString().trim());
-        object.addProperty("type", typerSpinner.getSelectedItem().toString());
-        object.addProperty("gender", genderSpiner.getSelectedItem().toString());
+        object.addProperty("type", typeSpinner.getSelectedItem().toString());
+        object.addProperty("gender", genderSpinner.getSelectedItem().toString());
         object.addProperty("id_user", id_user);
+        object.addProperty("latitude", 36.859406);
+        object.addProperty("longitude", 11.108534);
 
-        ApiUtil.getServiceClass().addPet(object).enqueue(new Callback<JsonObject>() {
+        ApiUtil.getServiceClass().addAdoptions(object).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Toast.makeText(AddMyPetActivity.this, "pet added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddAdoptionActivity.this, "adoption added", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
@@ -118,7 +122,7 @@ public class AddMyPetActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 System.out.println(t.getMessage());
-                Toast.makeText(AddMyPetActivity.this, "please connect to the internet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddAdoptionActivity.this, "please connect to the internet", Toast.LENGTH_SHORT).show();
             }
         });
     }

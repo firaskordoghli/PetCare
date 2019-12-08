@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
+import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.Data.Pet;
 import kordoghli.firas.petcare.Data.User;
 import retrofit2.Call;
@@ -26,4 +27,16 @@ public interface RetrofitInterface {
 
     @POST("getMyPetById/")
     public Call<List<Pet>> getMyPetById(@Body JsonObject object);
+
+    @POST("addAdoption")
+    public Call<JsonObject> addAdoptions(@Body JsonObject object);
+
+    @POST("getAllAdoptions/")
+    public Call<List<Adoption>> getAllAdoptions();
+
+    @POST("getAllMyAdoptions/")
+    public Call<List<Adoption>> getAllMyAdoptions(@Body JsonObject object);
+
+    @POST("getAdoptionById/")
+    public Call<Adoption> getAdoptionById(@Body JsonObject object);
 }

@@ -4,24 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Ui.MyPet.AddMyPetActivity">
+    tools:context=".Ui.Adoptions.AddAdoptionActivity">
+
+    <EditText
+        android:id="@+id/etAddAdoptionColor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="color"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etAddAdoptionBirth" />
 
     <ImageView
-        android:id="@+id/ivetAddPetPhoto"
+        android:id="@+id/ivAddAdoptionPhoto"
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/etAddPetName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/placeholder" />
 
     <EditText
-        android:id="@+id/etAddPetName"
+        android:id="@+id/etAddAdoptionName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -32,10 +44,10 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivetAddPetPhoto" />
+        app:layout_constraintTop_toBottomOf="@+id/ivAddAdoptionPhoto" />
 
     <Spinner
-        android:id="@+id/spinnerAddPetType"
+        android:id="@+id/spinnerAddAdoptionType"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -43,10 +55,10 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etAddPetName" />
+        app:layout_constraintTop_toBottomOf="@+id/etAddAdoptionName" />
 
     <Spinner
-        android:id="@+id/spinnerAddPetGender"
+        android:id="@+id/spinnerAddAdoptionGender"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -54,10 +66,10 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerAddPetType" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerAddAdoptionType" />
 
     <EditText
-        android:id="@+id/etAddPetRace"
+        android:id="@+id/etAddAdoptionRace"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -68,10 +80,10 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerAddPetGender" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerAddAdoptionGender" />
 
     <EditText
-        android:id="@+id/etAddPetBirth"
+        android:id="@+id/etAddAdoptionBirth"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -83,24 +95,24 @@
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etAddPetRace" />
+        app:layout_constraintTop_toBottomOf="@+id/etAddAdoptionRace" />
 
     <EditText
-        android:id="@+id/etAddPetColor"
+        android:id="@+id/etAddAdoptionLocation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="color"
+        android:hint="location"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etAddPetBirth" />
+        app:layout_constraintTop_toBottomOf="@+id/etAddAdoptionColor" />
 
     <EditText
-        android:id="@+id/etAddPetDescription"
+        android:id="@+id/etAddAdoptionDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -111,20 +123,20 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etAddPetColor" />
+        app:layout_constraintTop_toBottomOf="@+id/etAddAdoptionLocation" />
 
     <Button
-        android:id="@+id/btnAddPet"
+        android:id="@+id/btnAddAdoption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/button_yellow_rounded_corners"
-        android:text="add my pet"
+        android:text="add offer"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etAddPetDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/etAddAdoptionDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

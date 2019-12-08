@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -14,13 +15,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.Pet;
+import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
 import kordoghli.firas.petcare.Utile.Adapters.MyPetsAdapter;
+import kordoghli.firas.petcare.Utile.SessionManager;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,11 +35,13 @@ import retrofit2.Response;
  */
 public class MyPetsFragment extends Fragment {
 
+    private SessionManager sessionManager;
     private Button toAddPetBtn;
     private RecyclerView mRecycleView;
     private MyPetsAdapter petAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ShimmerFrameLayout mShimmerViewContainer;
+    private TextView noPetsTv;
 
 
     public MyPetsFragment() {
@@ -48,9 +54,13 @@ public class MyPetsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_pets, container, false);
+
         toAddPetBtn = view.findViewById(R.id.button);
+        noPetsTv = view.findViewById(R.id.tvNoPets);
+
         mRecycleView = view.findViewById(R.id.rvMyPets);
         mRecycleView.setHasFixedSize(true);
+
         toAddPetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,13 +69,18 @@ public class MyPetsFragment extends Fragment {
             }
         });
         mShimmerViewContainer = view.findViewById(R.id.upCommingEventShimmer);
-        listPets();
+
+        // User Session Manager
+        sessionManager = new SessionManager(getContext());
+        Gson gson = new Gson();
+        final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
+        listPets(currentUser.getId());
         return view;
     }
 
-    private void listPets() {
+    private void listPets(Integer id_user) {
         JsonObject object = new JsonObject();
-        object.addProperty("id_user", 1);
+        object.addProperty("id_user", id_user);
 
         ApiUtil.getServiceClass().getAllMyPets(object).enqueue(new Callback<List<Pet>>() {
             @Override
@@ -73,21 +88,24 @@ public class MyPetsFragment extends Fragment {
                 final List<Pet> petList = response.body();
                 mShimmerViewContainer.stopShimmer();
                 mShimmerViewContainer.setVisibility(View.GONE);
+                if (petList.size()==0){
+                    noPetsTv.setVisibility(View.VISIBLE);
+                }else {
+                    mLayoutManager = new LinearLayoutManager(getContext());
+                    petAdapter = new MyPetsAdapter(petList);
+                    mRecycleView.setLayoutManager(mLayoutManager);
+                    mRecycleView.setAdapter(petAdapter);
 
-                mLayoutManager = new LinearLayoutManager(getContext());
-                petAdapter =new MyPetsAdapter(petList);
-                mRecycleView.setLayoutManager(mLayoutManager);
-                mRecycleView.setAdapter(petAdapter);
-                
-                petAdapter.setOnItemClickListener(new MyPetsAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Toast.makeText(getContext(), petList.get(position).getId().toString(), Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getContext(), MyPetDetailsActivity.class);
-                        intent.putExtra("idPetFromMyPets", petList.get(position).getId());
-                        startActivity(intent);
-                    }
-                });
+                    petAdapter.setOnItemClickListener(new MyPetsAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            Toast.makeText(getContext(), petList.get(position).getId().toString(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getContext(), MyPetDetailsActivity.class);
+                            intent.putExtra("idPetFromMyPets", petList.get(position).getId());
+                            startActivity(intent);
+                        }
+                    });
+                }
             }
 
             @Override
