@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/placeholder"
+            app:srcCompat="@drawable/golden_retriever_puppy"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#7F000000"
+            android:background="@drawable/gradient_background"
             app:layout_constraintTop_toTopOf="@+id/top_space"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
