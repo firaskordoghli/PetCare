@@ -115,8 +115,9 @@ public class AddAdoptionActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Toast.makeText(AddAdoptionActivity.this, "adoption added", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                finish();
+                //startActivity(intent);
             }
 
             @Override

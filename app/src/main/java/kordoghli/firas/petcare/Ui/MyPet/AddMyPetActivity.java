@@ -112,6 +112,7 @@ public class AddMyPetActivity extends AppCompatActivity {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Toast.makeText(AddMyPetActivity.this, "pet added", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                finish();
                 startActivity(intent);
             }
 

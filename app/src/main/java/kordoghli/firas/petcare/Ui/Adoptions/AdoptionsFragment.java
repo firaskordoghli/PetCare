@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,9 +16,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.Adoption;
+import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
 import kordoghli.firas.petcare.Utile.Adapters.AdoptionsAdapter;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
@@ -29,11 +33,11 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  */
 public class AdoptionsFragment extends Fragment {
-    private Button addadoption;
     private RecyclerView mRecycleView;
     private AdoptionsAdapter adoptionsAdapter;
     private GridLayoutManager mGridLayoutManager;
     private TextView noAdoptionsTv;
+    private ImageButton toAddAdoptionBtn;
 
     public AdoptionsFragment() {
         // Required empty public constructor
@@ -46,13 +50,13 @@ public class AdoptionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_adoptions, container, false);
 
-        addadoption = view.findViewById(R.id.button2);
+        toAddAdoptionBtn = view.findViewById(R.id.btnToAddAdoption);
         noAdoptionsTv = view.findViewById(R.id.textView4);
 
         mRecycleView = view.findViewById(R.id.rvAdoptions);
         mRecycleView.setHasFixedSize(true);
 
-        addadoption.setOnClickListener(new View.OnClickListener() {
+        toAddAdoptionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), AddAdoptionActivity.class);
@@ -93,6 +97,12 @@ public class AdoptionsFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAllAdoptions();
     }
 
 }

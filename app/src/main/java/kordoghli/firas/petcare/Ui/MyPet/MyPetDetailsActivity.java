@@ -65,7 +65,7 @@ public class MyPetDetailsActivity extends AppCompatActivity {
                         deletePetById(idPetFromMyPets);
                     }
                 });
-                alertDialog.show();  //<-- See This!
+                alertDialog.show();
             }
         });
 
