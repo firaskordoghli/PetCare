@@ -2,7 +2,11 @@ package kordoghli.firas.petcare.Ui.MyPet;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +26,7 @@ public class MyPetDetailsActivity extends AppCompatActivity {
 
     private ImageView petIv,petGenderIv;
     private TextView petNameTv,petBirthTv,petTypeTv,petRaceTv,petColorTv,petDescriptionTv;
+    private ImageButton backBtn,deleteBtn,editBtn;
     private Integer idPetFromMyPets = null;
 
     @Override
@@ -37,6 +42,32 @@ public class MyPetDetailsActivity extends AppCompatActivity {
         petRaceTv = findViewById(R.id.tvPetRaceDetail);
         petColorTv = findViewById(R.id.tvPetColorDetail);
         petDescriptionTv = findViewById(R.id.tvPetDEscriptionDetail);
+        backBtn = findViewById(R.id.btnBackMyPetDetails);
+        deleteBtn = findViewById(R.id.btnDeleteMyPet);
+        editBtn = findViewById(R.id.btnToEditMyPet);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog alertDialog = new AlertDialog.Builder(MyPetDetailsActivity.this).create(); //Read Update
+                alertDialog.setTitle("WARNING !!!");
+                alertDialog.setMessage("do you want to delete your pet ?");
+
+                alertDialog.setButton("DELETE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        deletePetById(idPetFromMyPets);
+                    }
+                });
+                alertDialog.show();  //<-- See This!
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -66,6 +97,24 @@ public class MyPetDetailsActivity extends AppCompatActivity {
             public void onFailure(Call<List<Pet>> call, Throwable t) {
                 Toast.makeText(MyPetDetailsActivity.this,"error "+ t.getMessage(), Toast.LENGTH_LONG).show();
                 System.out.println("error :"+ t.getMessage());
+            }
+        });
+    }
+
+    private void deletePetById(Integer id_pet) {
+        JsonObject object = new JsonObject();
+        object.addProperty("id", id_pet);
+
+        ApiUtil.getServiceClass().deleteMyPetById(object).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Toast.makeText(MyPetDetailsActivity.this, "pet Deleted", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
             }
         });
     }

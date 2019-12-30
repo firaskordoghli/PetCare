@@ -39,4 +39,7 @@ public interface RetrofitInterface {
 
     @POST("getAdoptionById/")
     public Call<Adoption> getAdoptionById(@Body JsonObject object);
+
+    @POST("deleteMyPetById/")
+    public Call<JsonObject> deleteMyPetById(@Body JsonObject object);
 }

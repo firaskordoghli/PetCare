@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Ui.MyPet.MyPetsFragment">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="add new pet"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/tvNoPets"
         android:layout_width="wrap_content"
@@ -40,7 +30,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/btnToAddPet" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/upCommingEventShimmer"
@@ -51,10 +41,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:orientation="vertical"
-        app:shimmer_duration="800"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/btnToAddPet"
+        app:shimmer_duration="800">
 
         <!-- Adding 7 rows of placeholders -->
         <LinearLayout
@@ -79,6 +69,17 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
+    <ImageButton
+        android:id="@+id/btnToAddPet"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_add_circle_outline_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

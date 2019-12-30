@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ import retrofit2.Response;
 public class MyPetsFragment extends Fragment {
 
     private SessionManager sessionManager;
-    private Button toAddPetBtn;
+    private ImageButton toAddPetBtn;
     private RecyclerView mRecycleView;
     private MyPetsAdapter petAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -55,7 +56,7 @@ public class MyPetsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_pets, container, false);
 
-        toAddPetBtn = view.findViewById(R.id.button);
+        toAddPetBtn = view.findViewById(R.id.btnToAddPet);
         noPetsTv = view.findViewById(R.id.tvNoPets);
 
         mRecycleView = view.findViewById(R.id.rvMyPets);
@@ -119,6 +120,9 @@ public class MyPetsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mShimmerViewContainer.startShimmer();
+        Gson gson = new Gson();
+        final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
+        listPets(currentUser.getId());
     }
 
     @Override
