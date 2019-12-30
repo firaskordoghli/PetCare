@@ -1,9 +1,12 @@
 package kordoghli.firas.petcare.Ui.Adoptions;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -13,6 +16,15 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 
 import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.Data.User;
@@ -30,10 +42,14 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
     private Integer idAdoptionFromAdoptions = null;
     private ImageButton backBtn,deleteBtn,editBtn;
     private SessionManager sessionManager;
+    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Mapbox Access token
+        Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
+
         setContentView(R.layout.activity_adoption_details);
 
         adoptionIv = findViewById(R.id.ivAdoptionDetail);
@@ -47,6 +63,12 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.btnBackAdoptionDetail);
         deleteBtn = findViewById(R.id.btnToDeleteMyAdoption);
         editBtn = findViewById(R.id.btnToEditMyAdoption);
+
+
+        mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -99,10 +121,44 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
                 adoptionBirthTv.setText(adoption.getBirthDate());
                 adoptionColotTv.setText(adoption.getColor());
                 adoptionDescriptionTv.setText(adoption.getDescription());
+
                 if (adoption.getIdUser().equals(currentUser.getId())){
                     deleteBtn.setVisibility(View.VISIBLE);
                     editBtn.setVisibility(View.VISIBLE);
                 }
+
+                mapView.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(@NonNull final MapboxMap mapboxMap) {
+                        mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+                            @Override
+                            public void onStyleLoaded(@NonNull Style style) {
+                                mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+                                    @Override
+                                    public boolean onMapClick(@NonNull LatLng point) {
+                                        Uri gmmIntentUri = Uri.parse("geo:" + adoption.getLatitude() + "," + adoption.getLongitude() + "?q=" + adoption.getLatitude() + "," + adoption.getLongitude());
+                                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                        mapIntent.setPackage("com.google.android.apps.maps");
+                                        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                                            startActivity(mapIntent);
+                                        }
+                                        return true;
+                                    }
+                                });
+                                CameraPosition position = new CameraPosition.Builder()
+                                        .target(new LatLng(adoption.getLatitude(), adoption.getLongitude()))
+                                        .zoom(10)
+                                        .tilt(20)
+                                        .build();
+                                // Map is set up and the style has loaded. Now you can add data or make other map adjustments
+                                mapboxMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(adoption.getLatitude(), adoption.getLongitude())));
+                                mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 3000);
+
+                            }
+                        });
+                    }
+                });
             }
 
             @Override
@@ -128,5 +184,41 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
     }
 }

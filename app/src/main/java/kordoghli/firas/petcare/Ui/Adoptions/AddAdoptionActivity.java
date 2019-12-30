@@ -75,7 +75,7 @@ public class AddAdoptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new PlaceAutocomplete.IntentBuilder()
-                        .accessToken("pk.eyJ1IjoiZmlyYXNqb2siLCJhIjoiY2szeDFxeXN2MDc4bDNlcDYxaGZweDh2YiJ9.NDaA5oo_Jn4jbIrEEnfw7w")
+                        .accessToken(getString(R.string.mapbox_access_token))
                         .placeOptions(PlaceOptions.builder()
                                 .backgroundColor(Color.parseColor("#EEEEEE"))
                                 .limit(10)
