@@ -21,6 +21,7 @@ import java.util.List;
 import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
+import kordoghli.firas.petcare.Ui.Adoptions.AdoptionDetailsActivity;
 import kordoghli.firas.petcare.Ui.MyPet.MyPetDetailsActivity;
 import kordoghli.firas.petcare.Utile.Adapters.MyAdoptionsAdapter;
 import kordoghli.firas.petcare.Utile.SessionManager;
@@ -85,8 +86,8 @@ public class MyAdoptionsFragment extends Fragment {
                         @Override
                         public void onItemClick(int position) {
                             Toast.makeText(getContext(), adoptionList.get(position).getId().toString(), Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getContext(), MyPetDetailsActivity.class);
-                            intent.putExtra("idPetFromMyPets", adoptionList.get(position).getId());
+                            Intent intent = new Intent(getContext(), AdoptionDetailsActivity.class);
+                            intent.putExtra("idAdoptionFromAdoptions", adoptionList.get(position).getId());
                             startActivity(intent);
                         }
                     });
@@ -98,6 +99,14 @@ public class MyAdoptionsFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Gson gson = new Gson();
+        final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
+        listAdoptions(currentUser.getId());
     }
 
 }

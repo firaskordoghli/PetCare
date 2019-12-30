@@ -1,9 +1,10 @@
 package kordoghli.firas.petcare.Ui.Adoptions;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,14 +15,25 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.Calendar;
 
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
-import kordoghli.firas.petcare.Ui.MainActivity;
 import kordoghli.firas.petcare.Utile.SessionManager;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 import retrofit2.Call;
@@ -38,6 +50,11 @@ public class AddAdoptionActivity extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
     private Calendar calendar;
 
+    private Double latitude = 0.0;
+    private Double longitude = 0.0;
+
+    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +70,20 @@ public class AddAdoptionActivity extends AppCompatActivity {
         typeSpinner = findViewById(R.id.spinnerAddAdoptionType);
         genderSpinner = findViewById(R.id.spinnerAddAdoptionGender);
         addAdoptionBtn = findViewById(R.id.btnAddAdoption);
+
+        locationEt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new PlaceAutocomplete.IntentBuilder()
+                        .accessToken("pk.eyJ1IjoiZmlyYXNqb2siLCJhIjoiY2szeDFxeXN2MDc4bDNlcDYxaGZweDh2YiJ9.NDaA5oo_Jn4jbIrEEnfw7w")
+                        .placeOptions(PlaceOptions.builder()
+                                .backgroundColor(Color.parseColor("#EEEEEE"))
+                                .limit(10)
+                                .build(PlaceOptions.MODE_CARDS))
+                        .build(AddAdoptionActivity.this);
+                startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
+            }
+        });
 
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender, android.R.layout.simple_spinner_item);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -97,6 +128,23 @@ public class AddAdoptionActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE) {
+            CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
+            locationEt.setText(selectedCarmenFeature.placeName().toString());
+            try {
+                JSONObject json= (JSONObject) new JSONTokener(selectedCarmenFeature.toJson()).nextValue();
+                JSONArray json2 = json.getJSONArray("center");
+                latitude = json2.getDouble(0);
+                longitude = json2.getDouble(1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void addAdoption(Integer id_user) {
         JsonObject object = new JsonObject();
 
@@ -108,8 +156,8 @@ public class AddAdoptionActivity extends AppCompatActivity {
         object.addProperty("type", typeSpinner.getSelectedItem().toString());
         object.addProperty("gender", genderSpinner.getSelectedItem().toString());
         object.addProperty("id_user", id_user);
-        object.addProperty("latitude", 36.859406);
-        object.addProperty("longitude", 11.108534);
+        object.addProperty("latitude", latitude);
+        object.addProperty("longitude", longitude);
 
         ApiUtil.getServiceClass().addAdoptions(object).enqueue(new Callback<JsonObject>() {
             @Override
