@@ -1,15 +1,21 @@
 package kordoghli.firas.petcare.Utile.retrofit;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.Data.Pet;
 import kordoghli.firas.petcare.Data.User;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface RetrofitInterface {
 
@@ -45,4 +51,8 @@ public interface RetrofitInterface {
 
     @POST("deleteMyAdoptionById/")
     public Call<JsonObject> deleteMyAdoptionById(@Body JsonObject object);
+
+    @Multipart
+    @POST("/upload")
+    Call<JsonPrimitive> postImage(@Part MultipartBody.Part image, @Part("upload") RequestBody name);
 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -91,6 +92,7 @@ public class MyPetDetailsActivity extends AppCompatActivity {
                 petRaceTv.setText(myPet.getRace());
                 petColorTv.setText(myPet.getColor());
                 petDescriptionTv.setText(myPet.getDescription());
+                Picasso.get().load("http://192.168.1.8:3000/uploads/"+myPet.getPhoto()).into(petIv);
             }
 
             @Override
