@@ -18,7 +18,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".TestActivity" />
         <activity android:name=".Ui.Adoptions.AdoptionDetailsActivity" />
         <activity android:name=".Ui.Adoptions.AddAdoptionActivity" />
         <activity android:name=".Ui.SplashScreenActivity">

@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
-import kordoghli.firas.petcare.TestActivity;
 import kordoghli.firas.petcare.Utile.SessionManager;
 
 /**
@@ -23,7 +22,6 @@ import kordoghli.firas.petcare.Utile.SessionManager;
  */
 public class HomeFragment extends Fragment {
     private SessionManager sessionManager;
-    private Button btn;
 
 
 
@@ -44,14 +42,6 @@ public class HomeFragment extends Fragment {
         final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
         System.out.println("user :" + currentUser);
 
-        btn = view.findViewById(R.id.button);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), TestActivity.class);
-                startActivity(intent);
-            }
-        });
         return view;
     }
 
