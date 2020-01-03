@@ -7,6 +7,7 @@ import java.util.List;
 
 import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.Data.Pet;
+import kordoghli.firas.petcare.Data.Post;
 import kordoghli.firas.petcare.Data.User;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -55,4 +56,19 @@ public interface RetrofitInterface {
     @Multipart
     @POST("/upload")
     Call<JsonPrimitive> postImage(@Part MultipartBody.Part image, @Part("upload") RequestBody name);
+
+    @POST("addPost")
+    public Call<JsonObject> addPost(@Body JsonObject object);
+
+    @POST("getAllPosts/")
+    public Call<List<Post>> getAllPosts();
+
+    @POST("getAllMyPosts/")
+    public Call<List<Post>> getAllMyPosts(@Body JsonObject object);
+
+    @POST("getPostById/")
+    public Call<Post> getPostById(@Body JsonObject object);
+
+    @POST("deleteMyPostById/")
+    public Call<JsonObject> deleteMyPostById(@Body JsonObject object);
 }

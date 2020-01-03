@@ -11,9 +11,9 @@
         android:title="my pets"/>
 
     <item
-        android:id="@+id/diary"
+        android:id="@+id/blog"
         android:icon="@drawable/ic_diary"
-        android:title="diary"/>
+        android:title="blog"/>
 
     <item
         android:id="@+id/adoptions"

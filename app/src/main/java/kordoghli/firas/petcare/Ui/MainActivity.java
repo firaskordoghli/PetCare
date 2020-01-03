@@ -12,7 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import kordoghli.firas.petcare.R;
 import kordoghli.firas.petcare.Ui.Account.AccountFragment;
 import kordoghli.firas.petcare.Ui.Adoptions.AdoptionsFragment;
-import kordoghli.firas.petcare.Ui.Diary.DiaryFragment;
+import kordoghli.firas.petcare.Ui.Blog.BlogFragment;
 import kordoghli.firas.petcare.Ui.Home.HomeFragment;
 import kordoghli.firas.petcare.Ui.MyPet.MyPetsFragment;
 import kordoghli.firas.petcare.Utile.SessionManager;
@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new MyPetsFragment();
                             break;
 
-                        case R.id.diary:
-                            selectedFragment = new DiaryFragment();
+                        case R.id.blog:
+                            selectedFragment = new BlogFragment();
                             break;
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
