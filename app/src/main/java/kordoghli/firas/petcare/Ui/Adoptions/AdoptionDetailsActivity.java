@@ -29,6 +29,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
+import kordoghli.firas.petcare.Ui.Blog.BlogDetailActivity;
 import kordoghli.firas.petcare.Utile.SessionManager;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 import retrofit2.Call;
@@ -87,16 +88,17 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(AdoptionDetailsActivity.this).create(); //Read Update
-                alertDialog.setTitle("WARNING !!!");
-                alertDialog.setMessage("do you want to delete your pet ?");
-
-                alertDialog.setButton("DELETE", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteAdoptionById(idAdoptionFromAdoptions);
-                    }
-                });
-                alertDialog.show();
+                new AlertDialog.Builder(AdoptionDetailsActivity.this)
+                        .setTitle("Delete pet")
+                        .setMessage("Are you sure you want to delete this pet?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteAdoptionById(idAdoptionFromAdoptions);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(R.drawable.ic_warning_black_24dp)
+                        .show();
             }
         });
     }
