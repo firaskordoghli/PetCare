@@ -32,7 +32,7 @@ public class AccountFragment extends Fragment {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ImageView menuBtnIv,profileIv;
-    private TextView emaimProfileTv,usernameProfileTv;
+    private TextView emaimProfileTv,usernameProfileTv,phoneProfileTv;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -49,6 +49,7 @@ public class AccountFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
         menuBtnIv = view.findViewById(R.id.ivMenuBtn);
         profileIv = view.findViewById(R.id.ivProfile);
+        phoneProfileTv = view.findViewById(R.id.tvProfilePhone);
         emaimProfileTv = view.findViewById(R.id.tvProfileEmail);
         usernameProfileTv = view.findViewById(R.id.tvProfileUsername);
 
@@ -56,7 +57,7 @@ public class AccountFragment extends Fragment {
         sessionManager = new SessionManager(getContext());
         Gson gson = new Gson();
         User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
-
+        phoneProfileTv.setText(String.valueOf(currentUser.getPhone()));
         emaimProfileTv.setText(currentUser.getEmail());
         usernameProfileTv.setText(currentUser.getUsername());
 

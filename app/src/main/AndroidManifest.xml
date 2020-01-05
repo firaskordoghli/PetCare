@@ -18,12 +18,17 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Ui.LostAndFound.AddLostActivity"></activity>
+        <activity android:name=".Ui.LostAndFound.FoundActivity"></activity>
+        <activity android:name=".Ui.LostAndFound.LostActivity" />
+        <activity android:name=".Ui.LostAndFound.LostAndFoundActivity">
+
+        </activity>
+        <activity android:name=".Ui.LostAndFound.AddLostActivity" />
         <activity android:name=".Ui.Blog.BlogDetailActivity" />
         <activity android:name=".Ui.Blog.AddBlogActivity" />
         <activity android:name=".Ui.Adoptions.AdoptionDetailsActivity" />
         <activity android:name=".Ui.Adoptions.AddAdoptionActivity" />
-        <activity android:name=".Ui.SplashScreenActivity">
+        <activity android:name=".Ui.SplashScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

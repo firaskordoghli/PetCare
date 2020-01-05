@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login() {
         JsonObject object = new JsonObject();
-        object.addProperty("username", emailEt.getText().toString().trim());
+        object.addProperty("email", emailEt.getText().toString().trim());
         object.addProperty("password", passwordEt.getText().toString().trim());
         ApiUtil.getServiceClass().login(object).enqueue(new Callback<JsonObject>() {
             @Override

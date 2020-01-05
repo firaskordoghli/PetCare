@@ -24,7 +24,7 @@ import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
     private SessionManager sessionManager;
-    private EditText emailEt, usernameEt, passwordEt, passwordCEt;
+    private EditText emailEt, usernameEt, passwordEt, passwordCEt,phoneNumberEt;
     private Button signUpBtn;
 
     @Override
@@ -38,6 +38,7 @@ public class SignupActivity extends AppCompatActivity {
         usernameEt = findViewById(R.id.etUsernameSignUp);
         passwordEt = findViewById(R.id.etPasswordSignUp);
         passwordCEt = findViewById(R.id.etPaswwordCSignUp);
+        phoneNumberEt = findViewById(R.id.etPhoneSignUp);
         signUpBtn = findViewById(R.id.btnSignUp);
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +56,7 @@ public class SignupActivity extends AppCompatActivity {
 
         object.addProperty("username", usernameEt.getText().toString().trim());
         object.addProperty("email", emailEt.getText().toString().trim());
+        object.addProperty("phone", phoneNumberEt.getText().toString().trim());
         object.addProperty("password", passwordEt.getText().toString().trim());
 
         ApiUtil.getServiceClass().signUp(object).enqueue(new Callback<JsonObject>() {

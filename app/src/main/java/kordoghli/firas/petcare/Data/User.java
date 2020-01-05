@@ -1,5 +1,7 @@
 package kordoghli.firas.petcare.Data;
 
+import android.content.Intent;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,9 +19,20 @@ public class User implements Serializable {
     @SerializedName("email")
     @Expose
     private String email;
+    @SerializedName("phone")
+    @Expose
+    private Integer phone;
     @SerializedName("password")
     @Expose
     private String password;
+
+    public Integer getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Integer phone) {
+        this.phone = phone;
+    }
 
     public Integer getId() {
         return id;
@@ -59,6 +72,7 @@ public class User implements Serializable {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", phone=" + phone +
                 ", password='" + password + '\'' +
                 '}';
     }

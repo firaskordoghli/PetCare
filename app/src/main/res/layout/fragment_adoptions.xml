@@ -29,17 +29,32 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnToAddAdoption" />
+        app:layout_constraintTop_toBottomOf="@+id/bntToLostAndFound" />
 
-    <ImageButton
-        android:id="@+id/btnToAddAdoption"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <Button
+        android:id="@+id/bntToLostAndFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:background="@null"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_add_circle_outline_black_24dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button_yellow_rounded_corners"
+        android:text="lost and found"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabToAddAdoption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        app:borderWidth="0dp"
+        android:src="@drawable/ic_add_black_24dp"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

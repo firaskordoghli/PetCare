@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
+import kordoghli.firas.petcare.Ui.LostAndFound.LostAndFoundActivity;
 import kordoghli.firas.petcare.Utile.Adapters.AdoptionsAdapter;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 import retrofit2.Call;
@@ -37,7 +39,8 @@ public class AdoptionsFragment extends Fragment {
     private AdoptionsAdapter adoptionsAdapter;
     private GridLayoutManager mGridLayoutManager;
     private TextView noAdoptionsTv;
-    private ImageButton toAddAdoptionBtn;
+    private Button toLostAndFoundBtn;
+    private FloatingActionButton toAddAdoptionFab;
 
     public AdoptionsFragment() {
         // Required empty public constructor
@@ -50,13 +53,22 @@ public class AdoptionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_adoptions, container, false);
 
-        toAddAdoptionBtn = view.findViewById(R.id.btnToAddAdoption);
         noAdoptionsTv = view.findViewById(R.id.textView4);
+        toAddAdoptionFab = view.findViewById(R.id.fabToAddAdoption);
+        toLostAndFoundBtn = view.findViewById(R.id.bntToLostAndFound);
 
         mRecycleView = view.findViewById(R.id.rvAdoptions);
         mRecycleView.setHasFixedSize(true);
 
-        toAddAdoptionBtn.setOnClickListener(new View.OnClickListener() {
+        toLostAndFoundBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), LostAndFoundActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        toAddAdoptionFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), AddAdoptionActivity.class);
