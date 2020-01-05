@@ -1,9 +1,8 @@
-package kordoghli.firas.petcare.Ui.Adoptions;
+package kordoghli.firas.petcare.Ui.LostAndFound;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -14,17 +13,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -33,11 +29,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 
@@ -52,12 +46,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
-import kordoghli.firas.petcare.Ui.MyPet.AddMyPetActivity;
 import kordoghli.firas.petcare.Utile.SessionManager;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 import okhttp3.MediaType;
@@ -71,23 +63,17 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class AddAdoptionActivity extends AppCompatActivity {
-    private EditText nameEt,raceEt,birthEt,colorEt,descriptionEt,locationEt;
-    private ImageView adoptionIv;
-    private Spinner typeSpinner,genderSpinner;
-    private Button addAdoptionBtn;
-
-    private SessionManager sessionManager;
-    private DatePickerDialog datePickerDialog;
-    private Calendar calendar;
-
-    private Double latitude = 0.0;
-    private Double longitude = 0.0;
-
+public class AddLostActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
-
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
+    private ImageView lostIv;
+    private EditText descriptionEt, locationEt;
+    private Spinner typeSpinner, genderSpinner, classificationSpinner;
+    private Button addLostBtn;
+    private SessionManager sessionManager;
+    private Double latitude = 0.0;
+    private Double longitude = 0.0;
     private Uri picUri;
     private Bitmap mBitmap;
     private ArrayList<String> permissionsToRequest;
@@ -100,19 +86,16 @@ public class AddAdoptionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_adoption);
+        setContentView(R.layout.activity_add_lost);
         askPermissions();
 
-        nameEt = findViewById(R.id.etAddAdoptionName);
-        raceEt = findViewById(R.id.etAddAdoptionRace);
-        birthEt = findViewById(R.id.etAddAdoptionBirth);
-        colorEt = findViewById(R.id.etAddAdoptionColor);
-        descriptionEt = findViewById(R.id.etAddAdoptionDescription);
-        locationEt = findViewById(R.id.etAddAdoptionLocation);
-        adoptionIv = findViewById(R.id.ivAddAdoptionPhoto);
-        typeSpinner = findViewById(R.id.spinnerAddAdoptionType);
-        genderSpinner = findViewById(R.id.spinnerAddAdoptionGender);
-        addAdoptionBtn = findViewById(R.id.btnAddAdoption);
+        lostIv = findViewById(R.id.ivAddLostPhoto);
+        descriptionEt = findViewById(R.id.etAddLostDescription);
+        locationEt = findViewById(R.id.etAddLostLocation);
+        typeSpinner = findViewById(R.id.spinnerAddLostType);
+        genderSpinner = findViewById(R.id.spinnerAddLostGender);
+        classificationSpinner = findViewById(R.id.spinnerAddLostCassification);
+        addLostBtn = findViewById(R.id.btnAddLost);
 
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender, android.R.layout.simple_spinner_item);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -122,6 +105,16 @@ public class AddAdoptionActivity extends AppCompatActivity {
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(typeAdapter);
 
+        ArrayAdapter<CharSequence> classificationAdapter = ArrayAdapter.createFromResource(this, R.array.classification, android.R.layout.simple_spinner_item);
+        classificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        classificationSpinner.setAdapter(classificationAdapter);
+
+        lostIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
+            }
+        });
 
         locationEt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,52 +125,51 @@ public class AddAdoptionActivity extends AppCompatActivity {
                                 .backgroundColor(Color.parseColor("#EEEEEE"))
                                 .limit(10)
                                 .build(PlaceOptions.MODE_CARDS))
-                        .build(AddAdoptionActivity.this);
+                        .build(AddLostActivity.this);
                 startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
             }
         });
 
-        birthEt.setOnClickListener(new View.OnClickListener() {
+        addLostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                calendar = Calendar.getInstance();
-
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int month = calendar.get(Calendar.MONTH);
-                int year = calendar.get(Calendar.YEAR);
-
-                datePickerDialog = new DatePickerDialog(AddAdoptionActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int mYear, int mMonth, int mDay) {
-                        birthEt.setText(mDay + "." + (mMonth + 1) + "." + mYear);
-                    }
-                }, year, month, day);
-                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
-                datePickerDialog.show();
-            }
-        });
-
-        adoptionIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
-            }
-        });
-
-        addAdoptionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (validateInputs()){
-                    if (mBitmap != null){
-                        displayLoader();
+                if (validateInputs()) {
+                    if (mBitmap != null) {
                         multipartImageUpload();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Please select a valid photo", Toast.LENGTH_SHORT).show();
+                        displayLoader();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please select a valid photo", Toast.LENGTH_LONG).show();
                     }
                 }
             }
         });
+    }
+
+    private void addLost(Integer id_user) {
+        JsonObject object = new JsonObject();
+
+        object.addProperty("type", typeSpinner.getSelectedItem().toString());
+        object.addProperty("gender", genderSpinner.getSelectedItem().toString());
+        object.addProperty("photo", imageName);
+        object.addProperty("description", descriptionEt.getText().toString().trim());
+        object.addProperty("latitude", latitude);
+        object.addProperty("longitude", longitude);
+        object.addProperty("classification", classificationSpinner.getSelectedItem().toString());
+        object.addProperty("id_user", id_user);
+
+        ApiUtil.getServiceClass().addLost(object).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Toast.makeText(AddLostActivity.this, "lost added", Toast.LENGTH_SHORT).show();
+                pDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+
     }
 
     @Override
@@ -187,7 +179,7 @@ public class AddAdoptionActivity extends AppCompatActivity {
             CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
             locationEt.setText(selectedCarmenFeature.placeName().toString());
             try {
-                JSONObject json= (JSONObject) new JSONTokener(selectedCarmenFeature.toJson()).nextValue();
+                JSONObject json = (JSONObject) new JSONTokener(selectedCarmenFeature.toJson()).nextValue();
                 JSONArray json2 = json.getJSONArray("center");
                 longitude = json2.getDouble(0);
                 latitude = json2.getDouble(1);
@@ -199,68 +191,20 @@ public class AddAdoptionActivity extends AppCompatActivity {
             String filePath = getImageFilePath(data);
             if (filePath != null) {
                 mBitmap = BitmapFactory.decodeFile(filePath);
-                adoptionIv.setImageBitmap(mBitmap);
+                lostIv.setImageBitmap(mBitmap);
             }
         }
-    }
-
-    private void addAdoption(Integer id_user) {
-        JsonObject object = new JsonObject();
-
-        object.addProperty("name", nameEt.getText().toString().trim());
-        object.addProperty("race", raceEt.getText().toString().trim());
-        object.addProperty("birth_date", birthEt.getText().toString().trim());
-        object.addProperty("color", colorEt.getText().toString().trim());
-        object.addProperty("description", descriptionEt.getText().toString().trim());
-        object.addProperty("type", typeSpinner.getSelectedItem().toString());
-        object.addProperty("gender", genderSpinner.getSelectedItem().toString());
-        object.addProperty("photo", imageName);
-        object.addProperty("id_user", id_user);
-        object.addProperty("latitude", latitude);
-        object.addProperty("longitude", longitude);
-
-        ApiUtil.getServiceClass().addAdoptions(object).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Toast.makeText(AddAdoptionActivity.this, "adoption added", Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                pDialog.dismiss();
-                finish();
-                //startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                System.out.println(t.getMessage());
-                Toast.makeText(AddAdoptionActivity.this, "please connect to the internet", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private boolean validateInputs() {
-        if (nameEt.getText().toString().equals("")) {
-            nameEt.setError("required");
-            nameEt.requestFocus();
-            return false;
-        }
-        if (raceEt.getText().toString().equals("")) {
-            raceEt.setError("required");
-            raceEt.requestFocus();
-            return false;
-        }
-        if (birthEt.getText().toString().equals("")) {
-            birthEt.setError("required");
-            birthEt.requestFocus();
-            return false;
-        }
-        if (colorEt.getText().toString().equals("")) {
-            colorEt.setError("required");
-            colorEt.requestFocus();
-            return false;
-        }
         if (descriptionEt.getText().toString().equals("")) {
             descriptionEt.setError("required");
             descriptionEt.requestFocus();
+            return false;
+        }
+        if (locationEt.getText().toString().equals("")) {
+            locationEt.setError("required");
+            locationEt.requestFocus();
             return false;
         }
         return true;
@@ -452,14 +396,13 @@ public class AddAdoptionActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<JsonPrimitive> call, Response<JsonPrimitive> response) {
                     if (response.code() == 200) {
-                        Toast.makeText(AddAdoptionActivity.this, "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddLostActivity.this, "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
                     }
                     imageName = response.body().getAsString();
                     sessionManager = new SessionManager(getApplicationContext());
                     Gson gson = new Gson();
                     final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
-                    addAdoption(currentUser.getId());
-
+                    addLost(currentUser.getId());
                 }
 
                 @Override
@@ -477,7 +420,7 @@ public class AddAdoptionActivity extends AppCompatActivity {
     }
 
     private void displayLoader() {
-        pDialog = new ProgressDialog(AddAdoptionActivity.this);
+        pDialog = new ProgressDialog(AddLostActivity.this);
         pDialog.setMessage("Please wait...");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);

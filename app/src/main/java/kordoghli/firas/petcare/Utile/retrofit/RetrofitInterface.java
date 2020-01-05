@@ -6,6 +6,7 @@ import com.google.gson.JsonPrimitive;
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.Adoption;
+import kordoghli.firas.petcare.Data.Lost;
 import kordoghli.firas.petcare.Data.Pet;
 import kordoghli.firas.petcare.Data.Post;
 import kordoghli.firas.petcare.Data.User;
@@ -71,4 +72,16 @@ public interface RetrofitInterface {
 
     @POST("deleteMyPostById/")
     public Call<JsonObject> deleteMyPostById(@Body JsonObject object);
+
+    @POST("addLost")
+    public Call<JsonObject> addLost(@Body JsonObject object);
+
+    @POST("getAllLost/")
+    public Call<List<Lost>> getAllLost();
+
+    @POST("getLostById/")
+    public Call<Lost> getLostById(@Body JsonObject object);
+
+    @POST("deleteLostById/")
+    public Call<JsonObject> deleteLostById(@Body JsonObject object);
 }

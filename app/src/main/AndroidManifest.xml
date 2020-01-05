@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Ui.Blog.BlogDetailActivity"></activity>
+        <activity android:name=".Ui.LostAndFound.AddLostActivity"></activity>
+        <activity android:name=".Ui.Blog.BlogDetailActivity" />
         <activity android:name=".Ui.Blog.AddBlogActivity" />
         <activity android:name=".Ui.Adoptions.AdoptionDetailsActivity" />
         <activity android:name=".Ui.Adoptions.AddAdoptionActivity" />

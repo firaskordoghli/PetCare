@@ -42,7 +42,9 @@ public class AddBlogActivity extends AppCompatActivity {
         addPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addPost(currentUser.getId());
+                if (validateInputs()){
+                    addPost(currentUser.getId());
+                }
             }
         });
     }
@@ -67,5 +69,19 @@ public class AddBlogActivity extends AppCompatActivity {
                 Toast.makeText(AddBlogActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private boolean validateInputs() {
+        if (titleEt.getText().toString().equals("")) {
+            titleEt.setError("required");
+            titleEt.requestFocus();
+            return false;
+        }
+        if (descriptionEt.getText().toString().equals("")) {
+            descriptionEt.setError("required");
+            descriptionEt.requestFocus();
+            return false;
+        }
+        return true;
     }
 }

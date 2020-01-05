@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,13 +44,11 @@ import java.util.List;
 
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
-import kordoghli.firas.petcare.Ui.MainActivity;
 import kordoghli.firas.petcare.Utile.SessionManager;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,6 +58,8 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class AddMyPetActivity extends AppCompatActivity {
+    private final static int ALL_PERMISSIONS_RESULT = 107;
+    private final static int IMAGE_RESULT = 200;
     private EditText nameEt, raceEt, birthEt, colorEt, descriptionEt;
     private Spinner typerSpinner, genderSpiner;
     private ImageView petIv;
@@ -67,15 +67,15 @@ public class AddMyPetActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private DatePickerDialog datePickerDialog;
     private Calendar calendar;
-
-    private final static int ALL_PERMISSIONS_RESULT = 107;
-    private final static int IMAGE_RESULT = 200;
     private Uri picUri;
     private Bitmap mBitmap;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
     private String imageName = "";
+
+    private ProgressDialog pDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,10 +128,11 @@ public class AddMyPetActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (validateInputs()) {
-                    if (mBitmap != null)
+                    if (mBitmap != null) {
+                        displayLoader();
                         multipartImageUpload();
-                    else {
-                        Toast.makeText(getApplicationContext(), "Bitmap is null. Try again", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please select a valid photo", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -162,9 +163,8 @@ public class AddMyPetActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Toast.makeText(AddMyPetActivity.this, "pet added", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                pDialog.dismiss();
                 finish();
-                startActivity(intent);
             }
 
             @Override
@@ -413,7 +413,6 @@ public class AddMyPetActivity extends AppCompatActivity {
                     Gson gson = new Gson();
                     final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
                     addPet(currentUser.getId());
-
                 }
 
                 @Override
@@ -428,5 +427,13 @@ public class AddMyPetActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void displayLoader() {
+        pDialog = new ProgressDialog(AddMyPetActivity.this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 }

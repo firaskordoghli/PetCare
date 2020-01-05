@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.blog:
                             selectedFragment = new BlogFragment();
                             break;
+
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
