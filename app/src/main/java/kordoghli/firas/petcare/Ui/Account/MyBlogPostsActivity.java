@@ -86,6 +86,12 @@ public class MyBlogPostsActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        // User Session Manager
+        sessionManager = new SessionManager(getApplicationContext());
+        Gson gson = new Gson();
+        final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
+
+        myPosts(currentUser.getId());
         mShimmerViewContainer.startShimmer();
     }
 

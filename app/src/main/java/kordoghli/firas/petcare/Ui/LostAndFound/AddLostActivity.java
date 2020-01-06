@@ -162,6 +162,7 @@ public class AddLostActivity extends AppCompatActivity {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Toast.makeText(AddLostActivity.this, "lost added", Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
+                finish();
             }
 
             @Override

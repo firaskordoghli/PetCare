@@ -1,5 +1,7 @@
 package kordoghli.firas.petcare.Ui.LostAndFound;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -11,7 +13,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -40,6 +44,8 @@ public class LostDetailActivity extends AppCompatActivity {
     private Integer idLostFromLostAndFound = null;
     private SessionManager sessionManager;
     private Integer phoneNumber = null ;
+    private ConstraintLayout foundByCl;
+    private FloatingActionButton deleteLostFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,8 @@ public class LostDetailActivity extends AppCompatActivity {
         userNameTv = findViewById(R.id.tvLostDetailUser);
         callLostDetailIv = findViewById(R.id.ivLostDetailCall);
         classificationTv = findViewById(R.id.tvLostDetailClassification);
+        foundByCl = findViewById(R.id.clFoundBy);
+        deleteLostFab = findViewById(R.id.fadLostDetailDelete);
 
         mapView = (MapView) findViewById(R.id.mapViewLostDetail);
         mapView.onCreate(savedInstanceState);
@@ -74,6 +82,41 @@ public class LostDetailActivity extends AppCompatActivity {
             }
         });
 
+        deleteLostFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(LostDetailActivity.this)
+                        .setTitle("Delete post")
+                        .setMessage("Are you sure you want to delete this post?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteLost(idLostFromLostAndFound);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(R.drawable.ic_warning_black_24dp)
+                        .show();
+            }
+        });
+
+    }
+
+    private void  deleteLost (Integer id){
+        JsonObject object = new JsonObject();
+        object.addProperty("id", id);
+
+        ApiUtil.getServiceClass().deleteLostById(object).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Toast.makeText(LostDetailActivity.this, "post Deleted", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getUserById(Integer id){
@@ -112,6 +155,14 @@ public class LostDetailActivity extends AppCompatActivity {
                 typeTv.setText(lost.getType());
                 descriptionTv.setText(lost.getDescription());
                 classificationTv.setText(lost.getClassification());
+
+                if (currentUser.getId() == lost.getIdUser()){
+                    foundByCl.setVisibility(View.GONE);
+                    deleteLostFab.show();
+                }else {
+                    deleteLostFab.hide();
+                    foundByCl.setVisibility(View.VISIBLE);
+                }
 
                 if (lost.getClassification().equals("Lost")){
                     classificationTv.setBackgroundColor(Color.parseColor("#d11141"));

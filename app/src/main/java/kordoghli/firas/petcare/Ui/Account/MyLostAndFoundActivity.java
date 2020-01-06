@@ -86,7 +86,11 @@ public class MyLostAndFoundActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        sessionManager = new SessionManager(getApplicationContext());
+        Gson gson = new Gson();
+        final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
         mShimmerViewContainer.startShimmer();
+        myLastAndFound(currentUser.getId());
     }
 
     @Override
