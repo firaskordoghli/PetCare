@@ -6,15 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".Ui.Account.AccountFragment">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/ivProfile"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
-        app:civ_border_color="#00000000"
-        app:civ_border_width="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

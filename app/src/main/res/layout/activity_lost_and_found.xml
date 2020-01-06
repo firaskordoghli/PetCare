@@ -75,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Recent posts :"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
@@ -93,6 +93,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/lostAndFoundShimmer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/rvLostAndFound"
+        app:layout_constraintEnd_toEndOf="@+id/rvLostAndFound"
+        app:layout_constraintStart_toStartOf="@+id/rvLostAndFound"
+        app:layout_constraintTop_toTopOf="@+id/rvLostAndFound"
+        app:shimmer_duration="800">
 
+        <!-- Adding 7 rows of placeholders -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

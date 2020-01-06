@@ -27,6 +27,9 @@ public interface RetrofitInterface {
     @POST("login")
     public Call<JsonObject> login(@Body JsonObject object);
 
+    @POST("getUserById/")
+    public Call<User> getUserById(@Body JsonObject object);
+
     @POST("addPet")
     public Call<JsonObject> addPet(@Body JsonObject object);
 
@@ -77,7 +80,13 @@ public interface RetrofitInterface {
     public Call<JsonObject> addLost(@Body JsonObject object);
 
     @POST("getAllLost/")
+    public Call<List<Lost>> getAllLostAndFound();
+
+    @POST("getLost/")
     public Call<List<Lost>> getAllLost();
+
+    @POST("getFound/")
+    public Call<List<Lost>> getAllFound();
 
     @POST("getLostById/")
     public Call<Lost> getLostById(@Body JsonObject object);

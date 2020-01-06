@@ -2,7 +2,6 @@ package kordoghli.firas.petcare.Ui.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +23,7 @@ import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
     private SessionManager sessionManager;
-    private EditText emailEt, usernameEt, passwordEt, passwordCEt,phoneNumberEt;
+    private EditText emailEt, usernameEt, passwordEt, passwordCEt, phoneNumberEt;
     private Button signUpBtn;
 
     @Override
@@ -43,7 +42,7 @@ public class SignupActivity extends AppCompatActivity {
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validateInputs()){
+                if (validateInputs()) {
                     signUp();
                 }
             }
@@ -76,6 +75,7 @@ public class SignupActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
+
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 System.out.println(t.getMessage());
@@ -90,9 +90,14 @@ public class SignupActivity extends AppCompatActivity {
             usernameEt.requestFocus();
             return false;
         }
-        if (emailEt.getText().toString().equals("")) {
-            emailEt.setError("required");
+        if (emailEt.getText().toString().equals("") || !emailEt.getText().toString().contains("@")) {
+            emailEt.setError("email not valid");
             emailEt.requestFocus();
+            return false;
+        }
+        if (phoneNumberEt.getText().toString().equals("")) {
+            phoneNumberEt.setError("required");
+            phoneNumberEt.requestFocus();
             return false;
         }
         if (passwordEt.getText().toString().equals("")) {

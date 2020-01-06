@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -37,12 +38,12 @@ import retrofit2.Response;
 public class MyPetsFragment extends Fragment {
 
     private SessionManager sessionManager;
-    private ImageButton toAddPetBtn;
     private RecyclerView mRecycleView;
     private MyPetsAdapter petAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ShimmerFrameLayout mShimmerViewContainer;
     private TextView noPetsTv;
+    FloatingActionButton toAddPetFab;
 
 
     public MyPetsFragment() {
@@ -56,13 +57,12 @@ public class MyPetsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_pets, container, false);
 
-        toAddPetBtn = view.findViewById(R.id.btnToAddPet);
         noPetsTv = view.findViewById(R.id.tvNoPets);
-
+        toAddPetFab = view.findViewById(R.id.fabToAddMyPet);
         mRecycleView = view.findViewById(R.id.rvMyPets);
         mRecycleView.setHasFixedSize(true);
 
-        toAddPetBtn.setOnClickListener(new View.OnClickListener() {
+        toAddPetFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), AddMyPetActivity.class);
