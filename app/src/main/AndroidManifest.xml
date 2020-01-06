@@ -19,10 +19,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Ui.LostAndFound.LostDetailActivity"></activity>
+        <activity android:name=".Ui.Account.MyLostAndFoundActivity"></activity>
+        <activity android:name=".Ui.Account.MyBlogPostsActivity" />
+        <activity android:name=".Ui.LostAndFound.LostDetailActivity" />
         <activity android:name=".Ui.LostAndFound.FoundActivity" />
         <activity android:name=".Ui.LostAndFound.LostActivity" />
-        <activity android:name=".Ui.LostAndFound.LostAndFoundActivity"></activity>
+        <activity android:name=".Ui.LostAndFound.LostAndFoundActivity" />
         <activity android:name=".Ui.LostAndFound.AddLostActivity" />
         <activity android:name=".Ui.Blog.BlogDetailActivity" />
         <activity android:name=".Ui.Blog.AddBlogActivity" />

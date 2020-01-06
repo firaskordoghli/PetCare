@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
         <item
-            android:id="@+id/nav_third_fragment"
-            android:title="Help" />
+            android:id="@+id/nav_posts"
+            android:title="My blog posts" />
         <item
-            android:id="@+id/nav_about"
-            android:title="About" />
+            android:id="@+id/nav_losts"
+            android:title="My lost and found" />
         <item
             android:id="@+id/nav_log_out"
             android:title="Log out" />

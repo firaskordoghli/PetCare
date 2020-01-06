@@ -1,6 +1,7 @@
 package kordoghli.firas.petcare.Ui.Account;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -73,11 +74,13 @@ public class AccountFragment extends Fragment {
 
                         switch(item.getItemId()){
 
-                            case R.id.nav_third_fragment:
-                                Toast.makeText(getActivity(), "test 3", Toast.LENGTH_SHORT).show();
+                            case R.id.nav_posts:
+                                Intent intentMyBlog = new Intent(getContext(),MyBlogPostsActivity.class);
+                                startActivity(intentMyBlog);
                                 break;
-                            case R.id.nav_about:
-                                Toast.makeText(getActivity(), "test 4", Toast.LENGTH_SHORT).show();
+                            case R.id.nav_losts:
+                                Intent intentMyLost = new Intent(getContext(),MyLostAndFoundActivity.class);
+                                startActivity(intentMyLost);
                                 break;
                             case R.id.nav_log_out:
                                 // Clear the User session data

@@ -70,6 +70,9 @@ public interface RetrofitInterface {
     @POST("getAllMyPosts/")
     public Call<List<Post>> getAllMyPosts(@Body JsonObject object);
 
+    @POST("getAllMylostsAndFound/")
+    public Call<List<Lost>> getAllMylostAndFound(@Body JsonObject object);
+
     @POST("getPostById/")
     public Call<Post> getPostById(@Body JsonObject object);
 
