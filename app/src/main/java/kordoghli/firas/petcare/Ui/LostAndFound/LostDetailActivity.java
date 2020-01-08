@@ -1,6 +1,7 @@
 package kordoghli.firas.petcare.Ui.LostAndFound;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.squareup.picasso.Picasso;
 
 import kordoghli.firas.petcare.Data.Lost;
 import kordoghli.firas.petcare.Data.User;
@@ -46,6 +48,7 @@ public class LostDetailActivity extends AppCompatActivity {
     private Integer phoneNumber = null ;
     private ConstraintLayout foundByCl;
     private FloatingActionButton deleteLostFab;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class LostDetailActivity extends AppCompatActivity {
         // Mapbox Access token
         Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_lost_detail);
+        displayLoader();
 
         lostDetailIv = findViewById(R.id.ivLostDetail);
         genderTv = findViewById(R.id.tvLostDetailGender);
@@ -155,7 +159,7 @@ public class LostDetailActivity extends AppCompatActivity {
                 typeTv.setText(lost.getType());
                 descriptionTv.setText(lost.getDescription());
                 classificationTv.setText(lost.getClassification());
-
+                Picasso.get().load(ApiUtil.photoUrl() +lost.getPhoto()).into(lostDetailIv);
                 if (currentUser.getId() == lost.getIdUser()){
                     foundByCl.setVisibility(View.GONE);
                     deleteLostFab.show();
@@ -171,6 +175,9 @@ public class LostDetailActivity extends AppCompatActivity {
                 }
 
                 getUserById(lost.getIdUser());
+
+                pDialog.dismiss();
+
                 mapView.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
@@ -206,6 +213,7 @@ public class LostDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Lost> call, Throwable t) {
+                pDialog.dismiss();
                 System.out.println("error :" + t.getMessage());
             }
         });
@@ -251,5 +259,13 @@ public class LostDetailActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+    }
+
+    private void displayLoader() {
+        pDialog = new ProgressDialog(LostDetailActivity.this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 }

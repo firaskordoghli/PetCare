@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import kordoghli.firas.petcare.Data.ImageResponse;
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
 import kordoghli.firas.petcare.Ui.MyPet.AddMyPetActivity;
@@ -72,6 +74,7 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class AddAdoptionActivity extends AppCompatActivity {
+    public static final String TAG = "'SELIM'";
     private EditText nameEt,raceEt,birthEt,colorEt,descriptionEt,locationEt;
     private ImageView adoptionIv;
     private Spinner typeSpinner,genderSpinner;
@@ -448,22 +451,24 @@ public class AddAdoptionActivity extends AppCompatActivity {
             MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "upload");
 
-            ApiUtil.getServiceClass().postImage(body, name).enqueue(new Callback<JsonPrimitive>() {
+            ApiUtil.getServiceClass().postImage(body, name).enqueue(new Callback<ImageResponse>() {
                 @Override
-                public void onResponse(Call<JsonPrimitive> call, Response<JsonPrimitive> response) {
+                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.code() == 200) {
                         Toast.makeText(AddAdoptionActivity.this, "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
+                        System.out.println("$$$$$$$$$$$$$$$$$$$$ "+response.body());
+                        //imageName = response.body().getAsString();
+                        sessionManager = new SessionManager(getApplicationContext());
+                        Gson gson = new Gson();
+                        final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
+                        imageName = response.body().getFilename();
+                        Log.v(TAG, imageName);
+                        addAdoption(currentUser.getId());
                     }
-                    imageName = response.body().getAsString();
-                    sessionManager = new SessionManager(getApplicationContext());
-                    Gson gson = new Gson();
-                    final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
-                    addAdoption(currentUser.getId());
-
                 }
 
                 @Override
-                public void onFailure(Call<JsonPrimitive> call, Throwable t) {
+                public void onFailure(Call<ImageResponse> call, Throwable t) {
                     Toast.makeText(getApplicationContext(), "Request failed", Toast.LENGTH_SHORT).show();
                     t.printStackTrace();
                 }

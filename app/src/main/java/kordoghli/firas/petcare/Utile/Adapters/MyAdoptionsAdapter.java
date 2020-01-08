@@ -9,11 +9,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.Data.Pet;
 import kordoghli.firas.petcare.R;
+import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 
 public class MyAdoptionsAdapter extends RecyclerView.Adapter<MyAdoptionsAdapter.MyAdoptionsViewHolder> {
 
@@ -42,6 +45,7 @@ public class MyAdoptionsAdapter extends RecyclerView.Adapter<MyAdoptionsAdapter.
 
         holder.namePetTv.setText(adoption.getName());
         holder.birthPetTv.setText(adoption.getBirthDate());
+        Picasso.get().load(ApiUtil.photoUrl() +adoption.getPhoto()).into(holder.petIv);
         if (adoption.getGender().equals("Male")){
             holder.petGenderIv.setImageResource(R.drawable.ic_male);
         }else if (adoption.getGender().equals("Femelle")){

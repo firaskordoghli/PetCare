@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.squareup.picasso.Picasso;
 
 import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.Data.User;
@@ -44,6 +46,8 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
     private ImageButton backBtn,deleteBtn,editBtn;
     private SessionManager sessionManager;
     private MapView mapView;
+    private ProgressDialog pDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
         Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
 
         setContentView(R.layout.activity_adoption_details);
+        displayLoader();
 
         adoptionIv = findViewById(R.id.ivAdoptionDetail);
         adoptionNameTv = findViewById(R.id.tvAdoptionNameDetail);
@@ -124,10 +129,14 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
                 adoptionColotTv.setText(adoption.getColor());
                 adoptionDescriptionTv.setText(adoption.getDescription());
 
+                Picasso.get().load(ApiUtil.photoUrl() +adoption.getPhoto()).into(adoptionIv);
+
                 if (adoption.getIdUser().equals(currentUser.getId())){
                     deleteBtn.setVisibility(View.VISIBLE);
                     editBtn.setVisibility(View.VISIBLE);
                 }
+
+                pDialog.dismiss();
 
                 mapView.getMapAsync(new OnMapReadyCallback() {
                     @Override
@@ -222,5 +231,13 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+    }
+
+    private void displayLoader() {
+        pDialog = new ProgressDialog(AdoptionDetailsActivity.this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 }

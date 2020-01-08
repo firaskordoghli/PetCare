@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import kordoghli.firas.petcare.Data.ImageResponse;
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
 import kordoghli.firas.petcare.Utile.SessionManager;
@@ -397,18 +398,20 @@ public class AddMyPetActivity extends AppCompatActivity {
             fos.write(bitmapdata);
             fos.flush();
             fos.close();
+//            bos.close();
+//            bos.flush();
 
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "upload");
 
-            ApiUtil.getServiceClass().postImage(body, name).enqueue(new Callback<JsonPrimitive>() {
+            ApiUtil.getServiceClass().postImage(body, name).enqueue(new Callback<ImageResponse>() {
                 @Override
-                public void onResponse(Call<JsonPrimitive> call, Response<JsonPrimitive> response) {
+                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.code() == 200) {
                         Toast.makeText(AddMyPetActivity.this, "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
                     }
-                    imageName = response.body().getAsString();
+                    imageName = response.body().getFilename();
                     sessionManager = new SessionManager(getApplicationContext());
                     Gson gson = new Gson();
                     final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
@@ -416,7 +419,7 @@ public class AddMyPetActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<JsonPrimitive> call, Throwable t) {
+                public void onFailure(Call<ImageResponse> call, Throwable t) {
                     Toast.makeText(getApplicationContext(), "Request failed", Toast.LENGTH_SHORT).show();
                     t.printStackTrace();
                 }

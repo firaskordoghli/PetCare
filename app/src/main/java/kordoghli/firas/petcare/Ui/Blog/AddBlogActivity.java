@@ -1,5 +1,6 @@
 package kordoghli.firas.petcare.Ui.Blog;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,7 @@ public class AddBlogActivity extends AppCompatActivity {
     private Button addPostBtn;
     private EditText titleEt, descriptionEt;
     private SessionManager sessionManager;
-
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class AddBlogActivity extends AppCompatActivity {
     }
 
     private void addPost(Integer id_user) {
+        displayLoader();
         JsonObject object = new JsonObject();
 
         object.addProperty("subject", titleEt.getText().toString());
@@ -61,6 +63,7 @@ public class AddBlogActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Toast.makeText(AddBlogActivity.this, "Post added with succes", Toast.LENGTH_SHORT).show();
+                pDialog.dismiss();
                 finish();
             }
 
@@ -83,5 +86,13 @@ public class AddBlogActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void displayLoader() {
+        pDialog = new ProgressDialog(AddBlogActivity.this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 }

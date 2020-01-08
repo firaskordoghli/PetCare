@@ -1,5 +1,6 @@
 package kordoghli.firas.petcare.Ui.authentication;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private EditText emailEt, passwordEt;
     private Button loginBtn, toSignUpBtn;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (validateInputs()){
+                    displayLoader();
                     login();
                 }
             }
@@ -58,17 +61,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login() {
+
         JsonObject object = new JsonObject();
         object.addProperty("email", emailEt.getText().toString().trim());
         object.addProperty("password", passwordEt.getText().toString().trim());
         ApiUtil.getServiceClass().login(object).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                pDialog.dismiss();
                 Gson gson = new Gson();
                 JsonObject myJsonResponse = new JsonObject();
                 myJsonResponse.getAsJsonObject(gson.toJson(response.body()));
                 boolean existe = gson.toJson(response.body()).contains("false");
                 if (existe) {
+                    pDialog.dismiss();
                     emailEt.setError("bad credentials");
                     emailEt.requestFocus();
                 } else {
@@ -80,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                pDialog.dismiss();
                 Toast.makeText(LoginActivity.this, "please connect to the internet", Toast.LENGTH_SHORT).show();
             }
         });
@@ -98,5 +105,13 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void displayLoader() {
+        pDialog = new ProgressDialog(LoginActivity.this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 }

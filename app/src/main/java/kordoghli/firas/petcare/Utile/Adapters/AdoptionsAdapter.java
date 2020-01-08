@@ -1,6 +1,5 @@
 package kordoghli.firas.petcare.Utile.Adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +9,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.Adoption;
 import kordoghli.firas.petcare.R;
+import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 
 public class AdoptionsAdapter extends RecyclerView.Adapter<AdoptionsAdapter.AdoptionsViewHolder> {
 
     private List<Adoption> mAdoptionsList;
     private AdoptionsAdapter.OnItemClickListener mListener;
 
-    public AdoptionsAdapter(List<Adoption> adoptionsList) { this.mAdoptionsList = adoptionsList; }
+    public AdoptionsAdapter(List<Adoption> adoptionsList) {
+        this.mAdoptionsList = adoptionsList;
+    }
 
     public void setOnItemClickListener(AdoptionsAdapter.OnItemClickListener listener) {
         mListener = listener;
@@ -39,6 +43,7 @@ public class AdoptionsAdapter extends RecyclerView.Adapter<AdoptionsAdapter.Adop
         Adoption adoption = mAdoptionsList.get(position);
         holder.adoptionNameTv.setText(adoption.getName());
         holder.adoptionLocationTv.setText(adoption.getGender());
+        Picasso.get().load(ApiUtil.photoUrl() + adoption.getPhoto()).into(holder.adoptionIv);
 
     }
 

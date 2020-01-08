@@ -1,18 +1,18 @@
 package kordoghli.firas.petcare.Ui.Blog;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,9 +35,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BlogDetailActivity extends AppCompatActivity {
-    private TextView titlePostTv,datePostTv,descriptionPostTv;
+    private TextView titlePostTv, datePostTv, descriptionPostTv;
     private Integer idPostFromBlog = null;
-    private ImageButton backBtn,addCommentBtn;
+    private ImageButton backBtn, addCommentBtn;
     private FloatingActionButton deletePostDetailFab;
     private SessionManager sessionManager;
     private RecyclerView mRecycleView;
@@ -45,13 +45,14 @@ public class BlogDetailActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private ShimmerFrameLayout mShimmerViewContainer;
     private EditText commentEt;
-
+    private ProgressDialog pDialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blog_detail);
+        displayLoader();
         titlePostTv = findViewById(R.id.tvPostDetailTitle);
         datePostTv = findViewById(R.id.tvPostDetailDate);
         descriptionPostTv = findViewById(R.id.tvPostDetailDescription);
@@ -98,14 +99,14 @@ public class BlogDetailActivity extends AppCompatActivity {
         addCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validateInputs()){
+                if (validateInputs()) {
                     addComment(idPostFromBlog);
                 }
             }
         });
     }
 
-    private void getPostById(Integer idPostFromBlog){
+    private void getPostById(Integer idPostFromBlog) {
         JsonObject object = new JsonObject();
         object.addProperty("id", idPostFromBlog);
 
@@ -119,15 +120,17 @@ public class BlogDetailActivity extends AppCompatActivity {
             public void onResponse(Call<Post> call, Response<Post> response) {
                 Post post = response.body();
 
-                if (post.getId_user().equals(currentUser.getId())){
+                if (post.getId_user().equals(currentUser.getId())) {
                     deletePostDetailFab.show();
-                }else {
+                } else {
                     deletePostDetailFab.hide();
                 }
 
                 titlePostTv.setText(post.getSubject());
                 datePostTv.setText(post.getDate().substring(0, 10));
                 descriptionPostTv.setText(post.getContent());
+
+                pDialog.dismiss();
             }
 
             @Override
@@ -137,7 +140,7 @@ public class BlogDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void deletePost(Integer id_post){
+    private void deletePost(Integer id_post) {
         JsonObject object = new JsonObject();
         object.addProperty("id", id_post);
 
@@ -155,7 +158,7 @@ public class BlogDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void getCommentsForPost (Integer idPostFromBlog){
+    private void getCommentsForPost(Integer idPostFromBlog) {
         JsonObject object = new JsonObject();
         object.addProperty("id_post", idPostFromBlog);
 
@@ -215,5 +218,13 @@ public class BlogDetailActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void displayLoader() {
+        pDialog = new ProgressDialog(BlogDetailActivity.this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 }

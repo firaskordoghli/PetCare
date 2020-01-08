@@ -7,22 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
 
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.Adoption;
-import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
 import kordoghli.firas.petcare.Ui.LostAndFound.LostAndFoundActivity;
 import kordoghli.firas.petcare.Utile.Adapters.AdoptionsAdapter;
@@ -41,6 +38,8 @@ public class AdoptionsFragment extends Fragment {
     private TextView noAdoptionsTv;
     private Button toLostAndFoundBtn;
     private FloatingActionButton toAddAdoptionFab;
+    private ShimmerFrameLayout mShimmerViewContainer;
+
 
     public AdoptionsFragment() {
         // Required empty public constructor
@@ -59,6 +58,7 @@ public class AdoptionsFragment extends Fragment {
 
         mRecycleView = view.findViewById(R.id.rvAdoptions);
         mRecycleView.setHasFixedSize(true);
+        mShimmerViewContainer = view.findViewById(R.id.adoptionShimmer);
 
         toLostAndFoundBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +85,8 @@ public class AdoptionsFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Adoption>> call, Response<List<Adoption>> response) {
                 final List<Adoption> adoptionList = response.body();
+                mShimmerViewContainer.stopShimmer();
+                mShimmerViewContainer.setVisibility(View.GONE);
                 if (adoptionList.size() == 0) {
                     noAdoptionsTv.setVisibility(View.VISIBLE);
                 } else {
@@ -114,7 +116,14 @@ public class AdoptionsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mShimmerViewContainer.startShimmer();
         getAllAdoptions();
+    }
+
+    @Override
+    public void onPause() {
+        mShimmerViewContainer.stopShimmer();
+        super.onPause();
     }
 
 }

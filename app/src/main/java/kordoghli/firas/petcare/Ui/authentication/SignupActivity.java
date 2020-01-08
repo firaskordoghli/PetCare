@@ -1,5 +1,6 @@
 package kordoghli.firas.petcare.Ui.authentication;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +26,7 @@ public class SignupActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private EditText emailEt, usernameEt, passwordEt, passwordCEt, phoneNumberEt;
     private Button signUpBtn;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (validateInputs()) {
+                    displayLoader();
                     signUp();
                 }
             }
@@ -51,6 +54,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void signUp() {
+
         JsonObject object = new JsonObject();
 
         object.addProperty("username", usernameEt.getText().toString().trim());
@@ -62,6 +66,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Gson gson = new Gson();
+                pDialog.dismiss();
                 JsonObject myJsonResponse = new JsonObject();
                 myJsonResponse.getAsJsonObject(gson.toJson(response.body()));
                 boolean existe = gson.toJson(response.body()).contains("false");
@@ -74,11 +79,13 @@ public class SignupActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 }
+
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 System.out.println(t.getMessage());
+                pDialog.dismiss();
                 Toast.makeText(SignupActivity.this, "please connect to the internet", Toast.LENGTH_SHORT).show();
             }
         });
@@ -111,5 +118,13 @@ public class SignupActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void displayLoader() {
+        pDialog = new ProgressDialog(SignupActivity.this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 }

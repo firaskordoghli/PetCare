@@ -49,7 +49,6 @@ public class AccountFragment extends Fragment {
         viewPager = view.findViewById(R.id.viewPager);
         tabLayout = view.findViewById(R.id.tabLayout);
         menuBtnIv = view.findViewById(R.id.ivMenuBtn);
-        profileIv = view.findViewById(R.id.ivProfile);
         phoneProfileTv = view.findViewById(R.id.tvProfilePhone);
         emaimProfileTv = view.findViewById(R.id.tvProfileEmail);
         usernameProfileTv = view.findViewById(R.id.tvProfileUsername);

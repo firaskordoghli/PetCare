@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -39,6 +40,7 @@ public class MyPetsProfileFragment extends Fragment {
     private MyPetsAdapter petAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private TextView noPetstv;
+    private ShimmerFrameLayout mShimmerViewContainer;
 
 
     public MyPetsProfileFragment() {
@@ -54,6 +56,7 @@ public class MyPetsProfileFragment extends Fragment {
 
         mRecycleView = view.findViewById(R.id.rvMyPetsProfile);
         mRecycleView.setHasFixedSize(true);
+        mShimmerViewContainer = view.findViewById(R.id.myPetsProfileShimmer);
         noPetstv = view.findViewById(R.id.tvNoPetsProfile);
 
 
@@ -73,6 +76,8 @@ public class MyPetsProfileFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Pet>> call, Response<List<Pet>> response) {
                 final List<Pet> petList = response.body();
+                mShimmerViewContainer.stopShimmer();
+                mShimmerViewContainer.setVisibility(View.GONE);
 
                 if (petList.size()==0){
                     noPetstv.setVisibility(View.VISIBLE);
@@ -99,6 +104,18 @@ public class MyPetsProfileFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mShimmerViewContainer.startShimmer();
+    }
+
+    @Override
+    public void onPause() {
+        mShimmerViewContainer.stopShimmer();
+        super.onPause();
     }
 
 }

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -39,6 +40,7 @@ public class MyAdoptionsFragment extends Fragment {
     private MyAdoptionsAdapter petAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private TextView noAdoptionstv;
+    private ShimmerFrameLayout mShimmerViewContainer;
 
 
     public MyAdoptionsFragment() {
@@ -54,6 +56,7 @@ public class MyAdoptionsFragment extends Fragment {
 
         mRecycleView = view.findViewById(R.id.rvMyAdoptionsProfile);
         mRecycleView.setHasFixedSize(true);
+        mShimmerViewContainer = view.findViewById(R.id.myAdoptionProfileShimmer);
         noAdoptionstv = view.findViewById(R.id.tvNoAdoptionsProfile);
 
         // User Session Manager
@@ -73,7 +76,8 @@ public class MyAdoptionsFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Adoption>> call, Response<List<Adoption>> response) {
                 final List<Adoption> adoptionList = response.body();
-
+                mShimmerViewContainer.stopShimmer();
+                mShimmerViewContainer.setVisibility(View.GONE);
                 if (adoptionList.size() == 0) {
                     noAdoptionstv.setVisibility(View.VISIBLE);
                 } else {
@@ -107,6 +111,14 @@ public class MyAdoptionsFragment extends Fragment {
         Gson gson = new Gson();
         final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
         listAdoptions(currentUser.getId());
+        mShimmerViewContainer.startShimmer();
+    }
+
+
+    @Override
+    public void onPause() {
+        mShimmerViewContainer.stopShimmer();
+        super.onPause();
     }
 
 }

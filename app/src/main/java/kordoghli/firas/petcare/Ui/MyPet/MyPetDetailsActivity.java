@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -47,6 +48,11 @@ public class MyPetDetailsActivity extends AppCompatActivity {
         deleteBtn = findViewById(R.id.btnDeleteMyPet);
         editBtn = findViewById(R.id.btnToEditMyPet);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            idPetFromMyPets = extras.getInt("idPetFromMyPets");
+        }
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,23 +63,28 @@ public class MyPetDetailsActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(MyPetDetailsActivity.this).create(); //Read Update
-                alertDialog.setTitle("WARNING !!!");
-                alertDialog.setMessage("do you want to delete your pet ?");
-
-                alertDialog.setButton("DELETE", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        deletePetById(idPetFromMyPets);
-                    }
-                });
-                alertDialog.show();
+                new AlertDialog.Builder(MyPetDetailsActivity.this)
+                        .setTitle("Delete post")
+                        .setMessage("Are you sure you want to delete this post?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                deletePetById(idPetFromMyPets);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(R.drawable.ic_warning_black_24dp)
+                        .show();
             }
         });
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            idPetFromMyPets = extras.getInt("idPetFromMyPets");
-        }
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), UpdateMyPetActivity.class);
+                intent.putExtra("idPetFromDetails", idPetFromMyPets);
+                startActivity(intent);
+            }
+        });
 
         getPetById(idPetFromMyPets);
     }
@@ -92,7 +103,7 @@ public class MyPetDetailsActivity extends AppCompatActivity {
                 petRaceTv.setText(myPet.getRace());
                 petColorTv.setText(myPet.getColor());
                 petDescriptionTv.setText(myPet.getDescription());
-                Picasso.get().load("http://192.168.1.8:3000/uploads/"+myPet.getPhoto()).into(petIv);
+                Picasso.get().load(ApiUtil.photoUrl()+myPet.getPhoto()).into(petIv);
             }
 
             @Override
@@ -119,5 +130,11 @@ public class MyPetDetailsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        getPetById(idPetFromMyPets);
     }
 }

@@ -10,10 +10,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.Lost;
 import kordoghli.firas.petcare.R;
+import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 
 public class LostAndFoundAdapter extends RecyclerView.Adapter<LostAndFoundAdapter.LostAndFoundViewHolder> {
     private List<Lost> mlostList;
@@ -41,6 +44,7 @@ public class LostAndFoundAdapter extends RecyclerView.Adapter<LostAndFoundAdapte
 
         holder.descriptionTv.setText(lost.getDescription());
         holder.classificationTv.setText(lost.getClassification());
+        Picasso.get().load(ApiUtil.photoUrl() +lost.getPhoto()).into(holder.lostAndFoundIv);
 
         if (lost.getClassification().equals("Lost")){
             holder.classificationTv.setBackgroundColor(Color.parseColor("#d11141"));

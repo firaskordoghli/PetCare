@@ -1,8 +1,11 @@
-package kordoghli.firas.petcare.Ui.LostAndFound;
+package kordoghli.firas.petcare.Ui.MyPet;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -12,34 +15,22 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.mapbox.api.geocoding.v5.models.CarmenFeature;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,6 +38,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import kordoghli.firas.petcare.Data.ImageResponse;
@@ -65,18 +57,16 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class AddLostActivity extends AppCompatActivity {
-    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
+public class UpdateMyPetActivity extends AppCompatActivity {
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
-    public static final String ADD_LOST_ACTIVITY = "AddLostActivity";
-    private ImageView lostIv;
-    private EditText descriptionEt, locationEt;
-    private Spinner typeSpinner, genderSpinner, classificationSpinner;
-    private Button addLostBtn;
+    private EditText nameEt, raceEt, birthEt, colorEt, descriptionEt;
+    private Spinner typerSpinner, genderSpiner;
+    private ImageView petIv;
+    private Button addPetBtn;
     private SessionManager sessionManager;
-    private Double latitude = 0.0;
-    private Double longitude = 0.0;
+    private DatePickerDialog datePickerDialog;
+    private Calendar calendar;
     private Uri picUri;
     private Bitmap mBitmap;
     private ArrayList<String> permissionsToRequest;
@@ -85,130 +75,134 @@ public class AddLostActivity extends AppCompatActivity {
     private String imageName = "";
 
     private ProgressDialog pDialog;
+    private Integer idPetFromDetails = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_lost);
+        setContentView(R.layout.activity_update_my_pet);
+
         askPermissions();
 
-        lostIv = findViewById(R.id.ivAddLostPhoto);
-        descriptionEt = findViewById(R.id.etAddLostDescription);
-        locationEt = findViewById(R.id.etAddLostLocation);
-        typeSpinner = findViewById(R.id.spinnerAddLostType);
-        genderSpinner = findViewById(R.id.spinnerAddLostGender);
-        classificationSpinner = findViewById(R.id.spinnerAddLostCassification);
-        addLostBtn = findViewById(R.id.btnAddLost);
+        nameEt = findViewById(R.id.etUpdatePetName);
+        raceEt = findViewById(R.id.etUpdatePetRace);
+        birthEt = findViewById(R.id.etUpdatePetBirth);
+        colorEt = findViewById(R.id.etUpdatePetColor);
+        descriptionEt = findViewById(R.id.etUpdatePetDescription);
+        typerSpinner = findViewById(R.id.spinnerUpdatePetType);
+        genderSpiner = findViewById(R.id.spinnerUpdatePetGender);
+        petIv = findViewById(R.id.ivetUpdatePetPhoto);
+        addPetBtn = findViewById(R.id.btnUpdatePet);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            idPetFromDetails = extras.getInt("idPetFromDetails");
+        }
 
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender, android.R.layout.simple_spinner_item);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        genderSpinner.setAdapter(genderAdapter);
+        genderSpiner.setAdapter(genderAdapter);
 
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this, R.array.type, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeSpinner.setAdapter(typeAdapter);
+        typerSpinner.setAdapter(typeAdapter);
 
-        ArrayAdapter<CharSequence> classificationAdapter = ArrayAdapter.createFromResource(this, R.array.classification, android.R.layout.simple_spinner_item);
-        classificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        classificationSpinner.setAdapter(classificationAdapter);
+        birthEt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calendar = Calendar.getInstance();
 
-        lostIv.setOnClickListener(new View.OnClickListener() {
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+
+                datePickerDialog = new DatePickerDialog(UpdateMyPetActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int mYear, int mMonth, int mDay) {
+                        birthEt.setText(mDay + "." + (mMonth + 1) + "." + mYear);
+                    }
+                }, year, month, day);
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
+            }
+        });
+
+        addPetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (validateInputs()) {
+                    if (mBitmap != null) {
+                        displayLoader();
+                        multipartImageUpload();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please select a valid photo", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        petIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
             }
         });
-
-        locationEt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new PlaceAutocomplete.IntentBuilder()
-                        .accessToken(getString(R.string.mapbox_access_token))
-                        .placeOptions(PlaceOptions.builder()
-                                .backgroundColor(Color.parseColor("#EEEEEE"))
-                                .limit(10)
-                                .build(PlaceOptions.MODE_CARDS))
-                        .build(AddLostActivity.this);
-                startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
-            }
-        });
-
-        addLostBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (validateInputs()) {
-                    if (mBitmap != null) {
-                        multipartImageUpload();
-                        displayLoader();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Please select a valid photo", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-        });
     }
 
-    private void addLost(Integer id_user) {
+    private void updatePet(Integer id_pet){
         JsonObject object = new JsonObject();
 
-        object.addProperty("type", typeSpinner.getSelectedItem().toString());
-        object.addProperty("gender", genderSpinner.getSelectedItem().toString());
-        object.addProperty("photo", imageName);
+        object.addProperty("name", nameEt.getText().toString().trim());
+        object.addProperty("race", raceEt.getText().toString().trim());
+        object.addProperty("birth_date", birthEt.getText().toString().trim());
+        object.addProperty("color", colorEt.getText().toString().trim());
         object.addProperty("description", descriptionEt.getText().toString().trim());
-        object.addProperty("latitude", latitude);
-        object.addProperty("longitude", longitude);
-        object.addProperty("classification", classificationSpinner.getSelectedItem().toString());
-        object.addProperty("id_user", id_user);
+        object.addProperty("type", typerSpinner.getSelectedItem().toString());
+        object.addProperty("gender", genderSpiner.getSelectedItem().toString());
+        object.addProperty("photo", imageName);
+        object.addProperty("id", id_pet);
 
-        ApiUtil.getServiceClass().addLost(object).enqueue(new Callback<JsonObject>() {
+        ApiUtil.getServiceClass().updatePet(object).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Toast.makeText(AddLostActivity.this, "lost added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateMyPetActivity.this, "pet added", Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
                 finish();
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                System.out.println(t.getMessage());
+                Toast.makeText(UpdateMyPetActivity.this, "please connect to the internet", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE) {
-            CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
-            locationEt.setText(selectedCarmenFeature.placeName().toString());
-            try {
-                JSONObject json = (JSONObject) new JSONTokener(selectedCarmenFeature.toJson()).nextValue();
-                JSONArray json2 = json.getJSONArray("center");
-                longitude = json2.getDouble(0);
-                latitude = json2.getDouble(1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        } else if (requestCode == IMAGE_RESULT) {
-            String filePath = getImageFilePath(data);
-            if (filePath != null) {
-                mBitmap = BitmapFactory.decodeFile(filePath);
-                lostIv.setImageBitmap(mBitmap);
-            }
-        }
-    }
-
     private boolean validateInputs() {
+        if (nameEt.getText().toString().equals("")) {
+            nameEt.setError("required");
+            nameEt.requestFocus();
+            return false;
+        }
+        if (raceEt.getText().toString().equals("")) {
+            raceEt.setError("required");
+            raceEt.requestFocus();
+            return false;
+        }
+        if (birthEt.getText().toString().equals("")) {
+            birthEt.setError("required");
+            birthEt.requestFocus();
+            return false;
+        }
+        if (colorEt.getText().toString().equals("")) {
+            colorEt.setError("required");
+            colorEt.requestFocus();
+            return false;
+        }
         if (descriptionEt.getText().toString().equals("")) {
             descriptionEt.setError("required");
             descriptionEt.requestFocus();
-            return false;
-        }
-        if (locationEt.getText().toString().equals("")) {
-            locationEt.setError("required");
-            locationEt.requestFocus();
             return false;
         }
         return true;
@@ -280,6 +274,22 @@ public class AddLostActivity extends AppCompatActivity {
             outputFileUri = Uri.fromFile(new File(getImage.getPath(), "profile.png"));
         }
         return outputFileUri;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            //ImageView imageView = findViewById(R.id.imageView);
+            if (requestCode == IMAGE_RESULT) {
+                String filePath = getImageFilePath(data);
+                if (filePath != null) {
+                    mBitmap = BitmapFactory.decodeFile(filePath);
+                    petIv.setImageBitmap(mBitmap);
+                }
+            }
+        }
+
     }
 
     private String getImageFromFilePath(Intent data) {
@@ -391,6 +401,8 @@ public class AddLostActivity extends AppCompatActivity {
             fos.write(bitmapdata);
             fos.flush();
             fos.close();
+//            bos.close();
+//            bos.flush();
 
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
@@ -400,14 +412,11 @@ public class AddLostActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.code() == 200) {
-                        Toast.makeText(AddLostActivity.this, "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateMyPetActivity.this, "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
                     }
                     imageName = response.body().getFilename();
-                    Log.v(ADD_LOST_ACTIVITY, imageName);
-                    sessionManager = new SessionManager(getApplicationContext());
-                    Gson gson = new Gson();
-                    final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
-                    addLost(currentUser.getId());
+
+                    updatePet(idPetFromDetails);
                 }
 
                 @Override
@@ -425,7 +434,7 @@ public class AddLostActivity extends AppCompatActivity {
     }
 
     private void displayLoader() {
-        pDialog = new ProgressDialog(AddLostActivity.this);
+        pDialog = new ProgressDialog(UpdateMyPetActivity.this);
         pDialog.setMessage("Please wait...");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);

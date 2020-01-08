@@ -31,6 +31,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bntToLostAndFound" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/adoptionShimmer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/rvAdoptions"
+        app:layout_constraintEnd_toEndOf="@+id/rvAdoptions"
+        app:layout_constraintStart_toStartOf="@+id/rvAdoptions"
+        app:layout_constraintTop_toTopOf="@+id/rvAdoptions"
+        app:shimmer_duration="800">
+
+        <!-- Adding 7 rows of placeholders -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+
+            <include layout="@layout/data_placeholder_layout" />
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <Button
         android:id="@+id/bntToLostAndFound"
         android:layout_width="wrap_content"
