@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
@@ -32,6 +33,7 @@ public class MyLostAndFoundActivity extends AppCompatActivity {
     private LostAndFoundAdapter lostAndFoundAdapter;
     private ShimmerFrameLayout mShimmerViewContainer;
     private SessionManager sessionManager;
+    private TextView noPostTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class MyLostAndFoundActivity extends AppCompatActivity {
         mRecycleView = findViewById(R.id.rvMyLostAndFound);
         mRecycleView.setHasFixedSize(true);
         mShimmerViewContainer = findViewById(R.id.myLostAndFoundsShimmer);
+        noPostTv = findViewById(R.id.tvNoMyLostAndFound);
 
         // User Session Manager
         sessionManager = new SessionManager(getApplicationContext());
@@ -58,22 +61,29 @@ public class MyLostAndFoundActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Lost>> call, Response<List<Lost>> response) {
                 final List<Lost> lostList = response.body();
-                mShimmerViewContainer.stopShimmer();
-                mShimmerViewContainer.setVisibility(View.GONE);
 
-                mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                lostAndFoundAdapter = new LostAndFoundAdapter(lostList);
-                mRecycleView.setLayoutManager(mLayoutManager);
-                mRecycleView.setAdapter(lostAndFoundAdapter);
+                if (lostList.size() == 0){
+                    noPostTv.setVisibility(View.VISIBLE);
+                    mShimmerViewContainer.setVisibility(View.GONE);
+                }else {
+                    mShimmerViewContainer.stopShimmer();
+                    mShimmerViewContainer.setVisibility(View.GONE);
 
-                lostAndFoundAdapter.setOnItemClickListener(new LostAndFoundAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Intent intent = new Intent(getApplicationContext(), LostDetailActivity.class);
-                        intent.putExtra("idLostFromLostAndFound", lostList.get(position).getId());
-                        startActivity(intent);
-                    }
-                });
+                    mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    lostAndFoundAdapter = new LostAndFoundAdapter(lostList);
+                    mRecycleView.setLayoutManager(mLayoutManager);
+                    mRecycleView.setAdapter(lostAndFoundAdapter);
+
+                    lostAndFoundAdapter.setOnItemClickListener(new LostAndFoundAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            Intent intent = new Intent(getApplicationContext(), LostDetailActivity.class);
+                            intent.putExtra("idLostFromLostAndFound", lostList.get(position).getId());
+                            startActivity(intent);
+                        }
+                    });
+                }
+
             }
 
             @Override

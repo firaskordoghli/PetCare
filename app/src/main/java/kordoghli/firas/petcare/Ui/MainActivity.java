@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     Fragment selectedFragment = null;
                     switch (menuItem.getItemId()) {
-                        case R.id.home:
-                            selectedFragment = new HomeFragment();
-                            break;
 
                         case R.id.account:
                             selectedFragment = new AccountFragment();
@@ -67,6 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyPetsFragment()).commit();
     }
 }

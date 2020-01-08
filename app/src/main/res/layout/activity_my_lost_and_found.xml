@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".Ui.Account.MyLostAndFoundActivity">
 
+    <TextView
+        android:id="@+id/tvNoMyLostAndFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You have no lost and found posts"
+        android:textSize="15sp"
+        android:fontFamily="@font/montserrat_bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMyLostAndFound"
         android:layout_width="0dp"

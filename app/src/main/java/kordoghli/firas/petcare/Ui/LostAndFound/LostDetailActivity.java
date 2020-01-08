@@ -133,7 +133,6 @@ public class LostDetailActivity extends AppCompatActivity {
                 User user =response.body();
                 phoneNumber = user.getPhone();
                 userNameTv.setText("Found by " + user.getUsername());
-                Toast.makeText(LostDetailActivity.this, phoneNumber.toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

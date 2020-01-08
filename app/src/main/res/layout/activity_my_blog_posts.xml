@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".Ui.Account.MyBlogPostsActivity">
 
+    <TextView
+        android:id="@+id/tvNoMyBlogPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="you have no posts in the blog"
+        android:textSize="15sp"
+        android:fontFamily="@font/montserrat_bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMyBlogPosts"
         android:layout_width="0dp"

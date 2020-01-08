@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -41,12 +42,13 @@ import retrofit2.Response;
 public class AdoptionDetailsActivity extends AppCompatActivity {
     private ImageView adoptionIv;
     private TextView adoptionNameTv,adoptionTypeTv,adoptionGenderTv,adoptionRaceTv
-            ,adoptionBirthTv,adoptionColotTv,adoptionDescriptionTv;
+            ,adoptionBirthTv,adoptionColotTv,adoptionDescriptionTv,adoptionPhoneNumberTv;
     private Integer idAdoptionFromAdoptions = null;
     private ImageButton backBtn,deleteBtn,editBtn;
     private SessionManager sessionManager;
     private MapView mapView;
     private ProgressDialog pDialog;
+    private Integer phoneNumber = null ;
 
 
     @Override
@@ -69,6 +71,7 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.btnBackAdoptionDetail);
         deleteBtn = findViewById(R.id.btnToDeleteMyAdoption);
         editBtn = findViewById(R.id.btnToEditMyAdoption);
+        adoptionPhoneNumberTv = findViewById(R.id.tvAdoptionLocationDetail);
 
 
         mapView = (MapView) findViewById(R.id.mapView);
@@ -117,6 +120,33 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void getUserById(Integer id){
+        JsonObject object = new JsonObject();
+        object.addProperty("id", id);
+
+        ApiUtil.getServiceClass().getUserById(object).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                final User user =response.body();
+                adoptionPhoneNumberTv.setTextColor(Color.parseColor("#7cc2fd"));
+                adoptionPhoneNumberTv.setText(String.valueOf(user.getPhone()));
+                adoptionPhoneNumberTv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:"+user.getPhone()));
+                        startActivity(intent);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void getAdoptionById(Integer idAdoptionFromAdoptions) {
         JsonObject object = new JsonObject();
         object.addProperty("id", idAdoptionFromAdoptions);
@@ -137,7 +167,7 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
                 adoptionBirthTv.setText(adoption.getBirthDate());
                 adoptionColotTv.setText(adoption.getColor());
                 adoptionDescriptionTv.setText(adoption.getDescription());
-
+                getUserById(adoption.getIdUser());
                 Picasso.get().load(ApiUtil.photoUrl() +adoption.getPhoto()).into(adoptionIv);
 
                 if (adoption.getIdUser().equals(currentUser.getId())){

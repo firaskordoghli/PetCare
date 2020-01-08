@@ -20,6 +20,14 @@
         <item>Found</item>
     </string-array>
 
+    <string-array name="program">
+        <item>nails</item>
+        <item>medication</item>
+        <item>coat</item>
+        <item>shower</item>
+        <item>vaccine</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

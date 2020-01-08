@@ -171,11 +171,12 @@ public class AddAdoptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (validateInputs()){
+                    displayLoader();
                     if (mBitmap != null){
-                        displayLoader();
                         multipartImageUpload();
                     }
                     else {
+                        pDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "Please select a valid photo", Toast.LENGTH_SHORT).show();
                     }
                 }

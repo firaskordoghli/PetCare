@@ -11,6 +11,7 @@ import kordoghli.firas.petcare.Data.ImageResponse;
 import kordoghli.firas.petcare.Data.Lost;
 import kordoghli.firas.petcare.Data.Pet;
 import kordoghli.firas.petcare.Data.Post;
+import kordoghli.firas.petcare.Data.Program;
 import kordoghli.firas.petcare.Data.User;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -110,4 +111,10 @@ public interface RetrofitInterface {
 
     @POST("updateAdoption")
     public Call<JsonObject> updateAdoption(@Body JsonObject object);
+
+    @POST("addProgram")
+    public Call<JsonObject> addProgram(@Body JsonObject object);
+
+    @POST("getProgramForPet/")
+    public Call<List<Program>> getProgramForPet(@Body JsonObject object);
 }

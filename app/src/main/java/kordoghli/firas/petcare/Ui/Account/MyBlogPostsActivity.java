@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ public class MyBlogPostsActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private ShimmerFrameLayout mShimmerViewContainer;
     private SessionManager sessionManager;
+    private TextView noPostTv;
 
 
     @Override
@@ -41,6 +43,7 @@ public class MyBlogPostsActivity extends AppCompatActivity {
         mRecycleView = findViewById(R.id.rvMyBlogPosts);
         mRecycleView.setHasFixedSize(true);
         mShimmerViewContainer = findViewById(R.id.myBlogPostsShimmer);
+        noPostTv = findViewById(R.id.tvNoMyBlogPost);
 
         // User Session Manager
         sessionManager = new SessionManager(getApplicationContext());
@@ -58,22 +61,28 @@ public class MyBlogPostsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 final List<Post> postList = response.body();
-                mShimmerViewContainer.stopShimmer();
-                mShimmerViewContainer.setVisibility(View.GONE);
+                if (postList.size() == 0){
+                    noPostTv.setVisibility(View.VISIBLE);
+                    mShimmerViewContainer.setVisibility(View.GONE);
+                }else {
+                    mShimmerViewContainer.stopShimmer();
+                    mShimmerViewContainer.setVisibility(View.GONE);
 
-                mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                postAdapter = new PostsAdapter(postList);
-                mRecycleView.setLayoutManager(mLayoutManager);
-                mRecycleView.setAdapter(postAdapter);
+                    mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    postAdapter = new PostsAdapter(postList);
+                    mRecycleView.setLayoutManager(mLayoutManager);
+                    mRecycleView.setAdapter(postAdapter);
 
-                postAdapter.setOnItemClickListener(new PostsAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Intent intent = new Intent(getApplicationContext(), BlogDetailActivity.class);
-                        intent.putExtra("idPostFromBlog", postList.get(position).getId());
-                        startActivity(intent);
-                    }
-                });
+                    postAdapter.setOnItemClickListener(new PostsAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            Intent intent = new Intent(getApplicationContext(), BlogDetailActivity.class);
+                            intent.putExtra("idPostFromBlog", postList.get(position).getId());
+                            startActivity(intent);
+                        }
+                    });
+                }
+
             }
 
             @Override
