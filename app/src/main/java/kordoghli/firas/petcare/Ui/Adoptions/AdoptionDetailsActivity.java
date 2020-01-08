@@ -106,6 +106,15 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
                         .show();
             }
         });
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), UpdateAdoptionActivity.class);
+                intent.putExtra("idAdoptionFromDetails", idAdoptionFromAdoptions);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getAdoptionById(Integer idAdoptionFromAdoptions) {
@@ -205,6 +214,7 @@ public class AdoptionDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getAdoptionById(idAdoptionFromAdoptions);
         mapView.onResume();
     }
     @Override

@@ -1,5 +1,7 @@
 package kordoghli.firas.petcare.Ui.Adoptions;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,11 +16,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -31,14 +31,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 
@@ -59,7 +54,6 @@ import java.util.List;
 import kordoghli.firas.petcare.Data.ImageResponse;
 import kordoghli.firas.petcare.Data.User;
 import kordoghli.firas.petcare.R;
-import kordoghli.firas.petcare.Ui.MyPet.AddMyPetActivity;
 import kordoghli.firas.petcare.Utile.SessionManager;
 import kordoghli.firas.petcare.Utile.retrofit.ApiUtil;
 import okhttp3.MediaType;
@@ -73,8 +67,8 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class AddAdoptionActivity extends AppCompatActivity {
-    public static final String TAG = "'SELIM'";
+public class UpdateAdoptionActivity extends AppCompatActivity {
+
     private EditText nameEt,raceEt,birthEt,colorEt,descriptionEt,locationEt;
     private ImageView adoptionIv;
     private Spinner typeSpinner,genderSpinner;
@@ -99,23 +93,29 @@ public class AddAdoptionActivity extends AppCompatActivity {
     private String imageName = "";
 
     private ProgressDialog pDialog;
+    private Integer idAdoptionFromDetails = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_adoption);
+        setContentView(R.layout.activity_update_adoption);
         askPermissions();
 
-        nameEt = findViewById(R.id.etAddAdoptionName);
-        raceEt = findViewById(R.id.etAddAdoptionRace);
-        birthEt = findViewById(R.id.etAddAdoptionBirth);
-        colorEt = findViewById(R.id.etAddAdoptionColor);
-        descriptionEt = findViewById(R.id.etAddAdoptionDescription);
-        locationEt = findViewById(R.id.etAddAdoptionLocation);
-        adoptionIv = findViewById(R.id.ivAddAdoptionPhoto);
-        typeSpinner = findViewById(R.id.spinnerAddAdoptionType);
-        genderSpinner = findViewById(R.id.spinnerAddAdoptionGender);
-        addAdoptionBtn = findViewById(R.id.btnAddAdoption);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            idAdoptionFromDetails = extras.getInt("idAdoptionFromDetails");
+        }
+
+        nameEt = findViewById(R.id.etUpdateAdoptionName);
+        raceEt = findViewById(R.id.etUpdateAdoptionRace);
+        birthEt = findViewById(R.id.etUpdateAdoptionBirth);
+        colorEt = findViewById(R.id.etUpdateAdoptionColor);
+        descriptionEt = findViewById(R.id.etUpdateAdoptionDescription);
+        locationEt = findViewById(R.id.etUpdateAdoptionLocation);
+        adoptionIv = findViewById(R.id.ivUpdateAdoptionPhoto);
+        typeSpinner = findViewById(R.id.spinnerUpdateAdoptionType);
+        genderSpinner = findViewById(R.id.spinnerUpdateAdoptionGender);
+        addAdoptionBtn = findViewById(R.id.btnUpdateAdoption);
 
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender, android.R.layout.simple_spinner_item);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -124,7 +124,6 @@ public class AddAdoptionActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this, R.array.type, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(typeAdapter);
-
 
         locationEt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +134,7 @@ public class AddAdoptionActivity extends AppCompatActivity {
                                 .backgroundColor(Color.parseColor("#EEEEEE"))
                                 .limit(10)
                                 .build(PlaceOptions.MODE_CARDS))
-                        .build(AddAdoptionActivity.this);
+                        .build(UpdateAdoptionActivity.this);
                 startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
             }
         });
@@ -149,7 +148,7 @@ public class AddAdoptionActivity extends AppCompatActivity {
                 int month = calendar.get(Calendar.MONTH);
                 int year = calendar.get(Calendar.YEAR);
 
-                datePickerDialog = new DatePickerDialog(AddAdoptionActivity.this, new DatePickerDialog.OnDateSetListener() {
+                datePickerDialog = new DatePickerDialog(UpdateAdoptionActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int mYear, int mMonth, int mDay) {
                         birthEt.setText(mDay + "." + (mMonth + 1) + "." + mYear);
@@ -183,7 +182,7 @@ public class AddAdoptionActivity extends AppCompatActivity {
         });
     }
 
-    private void addAdoption(Integer id_user) {
+    private void updateAdoption(Integer id_adoption){
         JsonObject object = new JsonObject();
 
         object.addProperty("name", nameEt.getText().toString().trim());
@@ -194,22 +193,21 @@ public class AddAdoptionActivity extends AppCompatActivity {
         object.addProperty("type", typeSpinner.getSelectedItem().toString());
         object.addProperty("gender", genderSpinner.getSelectedItem().toString());
         object.addProperty("photo", imageName);
-        object.addProperty("id_user", id_user);
         object.addProperty("latitude", latitude);
         object.addProperty("longitude", longitude);
+        object.addProperty("id", id_adoption);
 
-        ApiUtil.getServiceClass().addAdoptions(object).enqueue(new Callback<JsonObject>() {
+        ApiUtil.getServiceClass().updateAdoption(object).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Toast.makeText(AddAdoptionActivity.this, "adoption added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateAdoptionActivity.this, "adoption updated", Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
                 finish();
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                System.out.println(t.getMessage());
-                Toast.makeText(AddAdoptionActivity.this, "please connect to the internet", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -453,13 +451,9 @@ public class AddAdoptionActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.code() == 200) {
-                        Toast.makeText(AddAdoptionActivity.this, "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
-                        sessionManager = new SessionManager(getApplicationContext());
-                        Gson gson = new Gson();
-                        final User currentUser = gson.fromJson(sessionManager.getUserDetails(), User.class);
+                        Toast.makeText(UpdateAdoptionActivity.this, "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
                         imageName = response.body().getFilename();
-                        Log.v(TAG, imageName);
-                        addAdoption(currentUser.getId());
+                        updateAdoption(idAdoptionFromDetails);
                     }
                 }
 
@@ -478,7 +472,7 @@ public class AddAdoptionActivity extends AppCompatActivity {
     }
 
     private void displayLoader() {
-        pDialog = new ProgressDialog(AddAdoptionActivity.this);
+        pDialog = new ProgressDialog(UpdateAdoptionActivity.this);
         pDialog.setMessage("Please wait...");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);

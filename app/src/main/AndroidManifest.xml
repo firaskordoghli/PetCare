@@ -19,7 +19,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Ui.MyPet.UpdateMyPetActivity"></activity>
+        <activity android:name=".Ui.Adoptions.UpdateAdoptionActivity"></activity>
+        <activity android:name=".Ui.MyPet.UpdateMyPetActivity" />
         <activity android:name=".Ui.Account.MyLostAndFoundActivity" />
         <activity android:name=".Ui.Account.MyBlogPostsActivity" />
         <activity android:name=".Ui.LostAndFound.LostDetailActivity" />
